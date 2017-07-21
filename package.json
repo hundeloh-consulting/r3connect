@@ -10,7 +10,7 @@
   },
   "main": "./build/index.js",
   "bin": {
-    "r3connect": "./cli.js"
+    "r3connect": "./build/CLI.js"
   },
   "scripts": {
     "cli": "better-npm-run cli",
