@@ -47,15 +47,15 @@ describe('Exceptions', () => {
       it('returns an key/value object', () => {
         const message: string = `
             LOCATION    CPIC (TCP/IP) on local host 7cd9c0b0e199 with Unicode
-            ERROR       partner '10.22.140.121:3300' not reached
-            TIME        Thu Nov 17 14:00:43 2016
+            ERROR       partner '127.0.0.1:3300' not reached
+            TIME        Thu Jul 17 14:00:43 2017
         `
         expect(RFCException.parseMessage(message)).to.be
           .a('Object')
           .and.deep.equal({
             LOCATION: 'CPIC (TCP/IP) on local host 7cd9c0b0e199 with Unicode',
-            ERROR: "partner '10.22.140.121:3300' not reached",
-            TIME: 'Thu Nov 17 14:00:43 2016',
+            ERROR: "partner '127.0.0.1:3300' not reached",
+            TIME: 'Thu Jul 17 14:00:43 2017',
           })
       })
     })
