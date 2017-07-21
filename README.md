@@ -215,7 +215,7 @@ npm run test
 
 * [hapi.js](https://hapijs.com/) - Rich framework for building applications and services
 * [node-rfc](https://github.com/SAP/node-rfc/) - nodejs RFC Connector
-* [pool2](https://github.com/myndzi/pool2) - Used to generate RSS Feeds
+* [pool2](https://github.com/myndzi/pool2) - Simple resource pool
 
 ## Contributing
 
