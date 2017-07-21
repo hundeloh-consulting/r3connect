@@ -64,7 +64,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 7);
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -234,7 +234,7 @@ exports.TimeoutException = exports.LogonException = exports.RFCException = expor
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _errorSubclass = __webpack_require__(15);
+var _errorSubclass = __webpack_require__(13);
 
 var _errorSubclass2 = _interopRequireDefault(_errorSubclass);
 
@@ -428,7 +428,7 @@ var _objectHash = __webpack_require__(20);
 
 var _objectHash2 = _interopRequireDefault(_objectHash);
 
-var _Client = __webpack_require__(10);
+var _Client = __webpack_require__(3);
 
 var _Client2 = _interopRequireDefault(_Client);
 
@@ -630,385 +630,6 @@ exports['default'] = (0, _utils.makeLoggable)((_temp = _class = function () {
 
 /***/ }),
 /* 3 */
-/***/ (function(module, exports) {
-
-module.exports = require("fs");
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports) {
-
-module.exports = require("path");
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports) {
-
-module.exports = require("joi");
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports) {
-
-module.exports = require("node-rfc");
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Pool = exports.Server = exports.Configuration = undefined;
-
-var _Configuration2 = __webpack_require__(8);
-
-var _Configuration3 = _interopRequireDefault(_Configuration2);
-
-var _Pool2 = __webpack_require__(2);
-
-var _Pool3 = _interopRequireDefault(_Pool2);
-
-var _Server2 = __webpack_require__(9);
-
-var _Server3 = _interopRequireDefault(_Server2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-var r3connect = {
-  Configuration: _Configuration3['default'],
-  Pool: _Pool3['default'],
-  Server: _Server3['default']
-};
-
-exports['default'] = r3connect;
-var Configuration = exports.Configuration = _Configuration3['default'];
-var Server = exports.Server = _Server3['default'];
-var Pool = exports.Pool = _Pool3['default'];
-module.exports = r3connect;
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _joi = __webpack_require__(5);
-
-var _joi2 = _interopRequireDefault(_joi);
-
-var _utils = __webpack_require__(0);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-exports['default'] = (0, _utils.makeLoggable)(function () {
-  function Configuration(config, fallbackConfig) {
-    _classCallCheck(this, Configuration);
-
-    this.config = null;
-    this.fallbackConfig = null;
-
-    this.fallbackConfig = fallbackConfig;
-    this.set(config);
-  }
-
-  _createClass(Configuration, [{
-    key: 'set',
-    value: function () {
-      function set(content) {
-        if (!content) {
-          this.log('error', 'The configuration provided is empty and hence the standard configuration file will be used.');
-          this.config = this.fallbackConfig;
-        } else {
-          var config = null;
-
-          // Content could be an extension or a config
-          if (typeof content === 'function') {
-            config = content(this.fallbackConfig);
-          } else {
-            config = content;
-          }
-
-          // Validate configuration against the defined schema
-          try {
-            Configuration.validate(config);
-            this.log('debug', 'Successfully reloaded configuration.');
-            this.config = config;
-          } catch (error) {
-            this.log('error', 'Unfortunately the new configuration does not follow the allowed schema and thus the old configuration wil be kept. The error was: ' + String(error.message));
-            this.config = this.config || this.fallbackConfig;
-          }
-        }
-      }
-
-      return set;
-    }()
-  }, {
-    key: 'get',
-    value: function () {
-      function get(path) {
-        var value = (0, _utils.findByPath)(this.config, path
-
-        // Take value from fallback configuration if it was not found
-        );if (value === undefined) {
-          value = (0, _utils.findByPath)(this.fallbackConfig, path);
-        } else if ((0, _utils.isFunction)(value)) {
-          // Allow extensibility by calling the function with the fallback value
-          var fallbackValue = (0, _utils.findByPath)(this.fallbackConfig, path);
-          value = value(fallbackValue);
-        }
-
-        if (value === undefined) {
-          this.log('error', 'The requested configuration for path "' + String(path) + '" does not exist.');
-        }
-
-        return value;
-      }
-
-      return get;
-    }()
-  }], [{
-    key: 'validate',
-    value: function () {
-      function validate(config) {
-        var schema = _joi2['default'].object().keys({
-          server: _joi2['default'].object().keys({
-            host: _joi2['default'].string(),
-            port: _joi2['default'].number().min(1),
-            routes: _joi2['default'].object().keys({
-              cors: _joi2['default'].boolean()
-            }),
-            tls: _joi2['default'].object().keys({
-              key: _joi2['default'].binary(),
-              cert: _joi2['default'].binary()
-            })
-          }),
-          logs: _joi2['default'].object().keys({
-            tags: _joi2['default'].array().items(_joi2['default'].string())
-          }),
-          connections: _joi2['default'].object().pattern(/\w+/, _joi2['default'].object().keys({
-            username: _joi2['default'].string().token().max(12).allow('').allow(null),
-            password: _joi2['default'].string().max(40).allow('').allow(null),
-            applicationServer: _joi2['default'].string().allow('').allow(null),
-            instanceNumber: _joi2['default'].number().integer().min(0).max(99),
-            client: _joi2['default'].number().integer().min(0).max(999),
-            router: _joi2['default'].string().allow('').allow(null),
-            functionModules: _joi2['default'].object().keys({
-              whitelist: _joi2['default'].array().items(_joi2['default'].string()),
-              blacklist: _joi2['default'].array().items(_joi2['default'].string())
-            })
-          }))
-        });
-        var result = _joi2['default'].validate(config, schema
-
-        // Provide details about the failed validation
-        );if (result.error) {
-          throw result.error;
-        }
-
-        return true;
-      }
-
-      return validate;
-    }()
-  }]);
-
-  return Configuration;
-}());
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /*
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         r3connect
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         Copyright (C) 2017 Julian Hundeloh
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         This program is free software: you can redistribute it and/or modify
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         it under the terms of the GNU Affero General Public License as published
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         by the Free Software Foundation, either version 3 of the License, or
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         (at your option) any later version.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         This program is distributed in the hope that it will be useful,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         but WITHOUT ANY WARRANTY; without even the implied warranty of
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         GNU Affero General Public License for more details.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         You should have received a copy of the GNU Affero General Public License
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         along with this program.  If not, see <http://www.gnu.org/licenses/>.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     */
-
-__webpack_require__(13);
-
-var _hapi = __webpack_require__(17);
-
-var _hapi2 = _interopRequireDefault(_hapi);
-
-var _good = __webpack_require__(16);
-
-var _good2 = _interopRequireDefault(_good);
-
-var _hapiBoomDecorators = __webpack_require__(18);
-
-var _hapiBoomDecorators2 = _interopRequireDefault(_hapiBoomDecorators);
-
-var _Exceptions = __webpack_require__(1);
-
-var _Pool = __webpack_require__(2);
-
-var _Pool2 = _interopRequireDefault(_Pool);
-
-var _routes = __webpack_require__(11);
-
-var _routes2 = _interopRequireDefault(_routes);
-
-var _utils = __webpack_require__(0);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Server = function () {
-  function Server(config) {
-    _classCallCheck(this, Server);
-
-    this.server = null;
-    this.config = null;
-
-    this.config = config;
-    this.server = this.createServer();
-  }
-
-  _createClass(Server, [{
-    key: 'createServer',
-    value: function () {
-      function createServer() {
-        // Create server
-        var server = new _hapi2['default'].Server({
-          debug: {
-            request: ['error',  false ? 'debug' : null].filter(Boolean)
-          }
-        });
-        server.connection(this.config.get('server')
-
-        // Add routes
-        );_routes2['default'].forEach(function (route) {
-          return server.route(route);
-        });
-
-        return server;
-      }
-
-      return createServer;
-    }()
-  }, {
-    key: 'start',
-    value: function () {
-      function start() {
-        var _this = this;
-
-        // Register plugins and start the server
-        return (0, _utils.promisify)(this.server.register, this.server)([{
-          register: _good2['default'],
-          options: {
-            ops: {
-              interval: 30000
-            },
-            reporters: {
-              console: [{
-                module: 'good-squeeze',
-                name: 'Squeeze',
-                args: [{
-                  request: this.config.get('logs.tags'),
-                  log: this.config.get('logs.tags'),
-                  ops: '*'
-                }]
-              }, {
-                module: 'good-console'
-              }, 'stdout'],
-              file: [{
-                module: 'good-squeeze',
-                name: 'Squeeze',
-                args: [{
-                  log: this.config.get('logs.tags'),
-                  ops: '*'
-                }]
-              }, {
-                module: 'good-squeeze',
-                name: 'SafeJson'
-              }, {
-                module: 'good-file',
-                args: ['./logs/log']
-              }]
-            }
-          }
-        }, {
-          register: _hapiBoomDecorators2['default']
-        }]).then(function () {
-          // Error handling
-          _this.server.decorate('reply', 'error', function () {
-            function replyWithError(error) {
-              if (error instanceof _Exceptions.HttpException) {
-                var data = Object.assign({
-                  code: error.code
-                }, error.context);
-                this.boom(error.statusCode, error.message, data);
-              } else {
-                this(error);
-              }
-            }
-
-            return replyWithError;
-          }());
-          _this.server.ext('onPreResponse', function (request, reply) {
-            var response = request.response;
-
-            if (!response.isBoom) {
-              reply['continue']();
-            } else {
-              // Output details of errors
-              response.output.payload.data = response.data ? response.data : undefined;
-              request.log(['error'], response);
-              reply(response);
-            }
-          }
-
-          // Provide configuration in requests
-          );_this.server.decorate('request', 'config', _this.config
-
-          // Start server
-          );return (0, _utils.promisify)(_this.server.start, _this.server)();
-        }).then(function () {
-          // Set loggers
-          _this.config.logger = _this.server.log.bind(_this.server);
-          _Pool2['default'].logger = _this.server.log.bind(_this.server
-
-          // Let's go
-          );_this.server.log(['debug'], 'Server running at: ' + String(_this.server.info.uri));
-        });
-      }
-
-      return start;
-    }()
-  }]);
-
-  return Server;
-}();
-
-exports['default'] = Server;
-
-/***/ }),
-/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 Object.defineProperty(exports, "__esModule", {
@@ -1052,7 +673,7 @@ exports['default'] = (0, _utils.makeLoggable)((_temp = _class = function () {
     get: function () {
       function get() {
         // eslint-disable-next-line global-require, import/no-unresolved
-        return __webpack_require__(6).Client;
+        return __webpack_require__(19).Client;
       }
 
       return get;
@@ -1192,14 +813,387 @@ exports['default'] = (0, _utils.makeLoggable)((_temp = _class = function () {
   invokeTimeout: 30 * 1000 }, _temp));
 
 /***/ }),
-/* 11 */
+/* 4 */
+/***/ (function(module, exports) {
+
+module.exports = require("joi");
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
+module.exports = require("path");
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Pool = exports.Server = exports.Configuration = exports.Client = undefined;
+
+var _Client2 = __webpack_require__(3);
+
+var _Client3 = _interopRequireDefault(_Client2);
+
+var _Configuration2 = __webpack_require__(7);
+
+var _Configuration3 = _interopRequireDefault(_Configuration2);
+
+var _Pool2 = __webpack_require__(2);
+
+var _Pool3 = _interopRequireDefault(_Pool2);
+
+var _Server2 = __webpack_require__(8);
+
+var _Server3 = _interopRequireDefault(_Server2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var r3connect = {
+  Client: _Client3['default'],
+  Configuration: _Configuration3['default'],
+  Pool: _Pool3['default'],
+  Server: _Server3['default']
+};
+
+exports['default'] = r3connect;
+var Client = exports.Client = _Client3['default'];
+var Configuration = exports.Configuration = _Configuration3['default'];
+var Server = exports.Server = _Server3['default'];
+var Pool = exports.Pool = _Pool3['default'];
+module.exports = r3connect;
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _joi = __webpack_require__(4);
+
+var _joi2 = _interopRequireDefault(_joi);
+
+var _utils = __webpack_require__(0);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+exports['default'] = (0, _utils.makeLoggable)(function () {
+  function Configuration(config, fallbackConfig) {
+    _classCallCheck(this, Configuration);
+
+    this.config = null;
+    this.fallbackConfig = null;
+
+    this.fallbackConfig = fallbackConfig;
+    this.set(config);
+  }
+
+  _createClass(Configuration, [{
+    key: 'set',
+    value: function () {
+      function set(content) {
+        if (!content) {
+          this.log('error', 'The configuration provided is empty and hence the standard configuration file will be used.');
+          this.config = this.fallbackConfig;
+        } else {
+          var config = null;
+
+          // Content could be an extension or a config
+          if (typeof content === 'function') {
+            config = content(this.fallbackConfig);
+          } else {
+            config = content;
+          }
+
+          // Validate configuration against the defined schema
+          try {
+            Configuration.validate(config);
+            this.log('debug', 'Successfully reloaded configuration.');
+            this.config = config;
+          } catch (error) {
+            this.log('error', 'Unfortunately the new configuration does not follow the allowed schema and thus the old configuration wil be kept. The error was: ' + String(error.message));
+            this.config = this.config || this.fallbackConfig;
+          }
+        }
+      }
+
+      return set;
+    }()
+  }, {
+    key: 'get',
+    value: function () {
+      function get(path) {
+        var value = (0, _utils.findByPath)(this.config, path
+
+        // Take value from fallback configuration if it was not found
+        );if (value === undefined) {
+          value = (0, _utils.findByPath)(this.fallbackConfig, path);
+        } else if ((0, _utils.isFunction)(value)) {
+          // Allow extensibility by calling the function with the fallback value
+          var fallbackValue = (0, _utils.findByPath)(this.fallbackConfig, path);
+          value = value(fallbackValue);
+        }
+
+        if (value === undefined) {
+          this.log('error', 'The requested configuration for path "' + String(path) + '" does not exist.');
+        }
+
+        return value;
+      }
+
+      return get;
+    }()
+  }], [{
+    key: 'validate',
+    value: function () {
+      function validate(config) {
+        var schema = _joi2['default'].object().keys({
+          server: _joi2['default'].object().keys({
+            host: _joi2['default'].string(),
+            port: _joi2['default'].number().min(1),
+            routes: _joi2['default'].object().keys({
+              cors: _joi2['default'].boolean()
+            }),
+            tls: _joi2['default'].object().keys({
+              key: _joi2['default'].binary(),
+              cert: _joi2['default'].binary()
+            })
+          }),
+          logs: _joi2['default'].object().keys({
+            tags: _joi2['default'].array().items(_joi2['default'].string())
+          }),
+          connections: _joi2['default'].object().pattern(/\w+/, _joi2['default'].object().keys({
+            username: _joi2['default'].string().token().max(12).allow('').allow(null),
+            password: _joi2['default'].string().max(40).allow('').allow(null),
+            applicationServer: _joi2['default'].string().allow('').allow(null),
+            instanceNumber: _joi2['default'].number().integer().min(0).max(99),
+            client: _joi2['default'].number().integer().min(0).max(999),
+            router: _joi2['default'].string().allow('').allow(null),
+            functionModules: _joi2['default'].object().keys({
+              whitelist: _joi2['default'].array().items(_joi2['default'].string()),
+              blacklist: _joi2['default'].array().items(_joi2['default'].string())
+            })
+          }))
+        });
+        var result = _joi2['default'].validate(config, schema
+
+        // Provide details about the failed validation
+        );if (result.error) {
+          throw result.error;
+        }
+
+        return true;
+      }
+
+      return validate;
+    }()
+  }]);
+
+  return Configuration;
+}());
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /*
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         r3connect
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         Copyright (C) 2017 Julian Hundeloh
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         This program is free software: you can redistribute it and/or modify
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         it under the terms of the GNU Affero General Public License as published
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         by the Free Software Foundation, either version 3 of the License, or
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         (at your option) any later version.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         This program is distributed in the hope that it will be useful,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         but WITHOUT ANY WARRANTY; without even the implied warranty of
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         GNU Affero General Public License for more details.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         You should have received a copy of the GNU Affero General Public License
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         along with this program.  If not, see <http://www.gnu.org/licenses/>.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     */
+
+__webpack_require__(11);
+
+var _hapi = __webpack_require__(16);
+
+var _hapi2 = _interopRequireDefault(_hapi);
+
+var _good = __webpack_require__(15);
+
+var _good2 = _interopRequireDefault(_good);
+
+var _hapiBoomDecorators = __webpack_require__(17);
+
+var _hapiBoomDecorators2 = _interopRequireDefault(_hapiBoomDecorators);
+
+var _Exceptions = __webpack_require__(1);
+
+var _Pool = __webpack_require__(2);
+
+var _Pool2 = _interopRequireDefault(_Pool);
+
+var _routes = __webpack_require__(9);
+
+var _routes2 = _interopRequireDefault(_routes);
+
+var _utils = __webpack_require__(0);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Server = function () {
+  function Server(config) {
+    _classCallCheck(this, Server);
+
+    this.server = null;
+    this.config = null;
+
+    this.config = config;
+    this.server = this.createServer();
+  }
+
+  _createClass(Server, [{
+    key: 'createServer',
+    value: function () {
+      function createServer() {
+        // Create server
+        var server = new _hapi2['default'].Server({
+          debug: {
+            request: ['error',  false ? 'debug' : null].filter(Boolean)
+          }
+        });
+        server.connection(this.config.get('server')
+
+        // Add routes
+        );_routes2['default'].forEach(function (route) {
+          return server.route(route);
+        });
+
+        return server;
+      }
+
+      return createServer;
+    }()
+  }, {
+    key: 'start',
+    value: function () {
+      function start() {
+        var _this = this;
+
+        // Register plugins and start the server
+        return (0, _utils.promisify)(this.server.register, this.server)([{
+          register: _good2['default'],
+          options: {
+            ops: {
+              interval: 30000
+            },
+            reporters: {
+              console: [{
+                module: 'good-squeeze',
+                name: 'Squeeze',
+                args: [{
+                  request: this.config.get('logs.tags'),
+                  log: this.config.get('logs.tags'),
+                  ops: '*'
+                }]
+              }, {
+                module: 'good-console'
+              }, 'stdout'],
+              file: [{
+                module: 'good-squeeze',
+                name: 'Squeeze',
+                args: [{
+                  log: this.config.get('logs.tags'),
+                  ops: '*'
+                }]
+              }, {
+                module: 'good-squeeze',
+                name: 'SafeJson'
+              }, {
+                module: 'good-file',
+                args: ['./logs/log']
+              }]
+            }
+          }
+        }, {
+          register: _hapiBoomDecorators2['default']
+        }]).then(function () {
+          // Error handling
+          _this.server.decorate('reply', 'error', function () {
+            function replyWithError(error) {
+              if (error instanceof _Exceptions.HttpException) {
+                var data = Object.assign({
+                  code: error.code
+                }, error.context);
+                this.boom(error.statusCode, error.message, data);
+              } else {
+                this(error);
+              }
+            }
+
+            return replyWithError;
+          }());
+          _this.server.ext('onPreResponse', function (request, reply) {
+            var response = request.response;
+
+            if (!response.isBoom) {
+              reply['continue']();
+            } else {
+              // Output details of errors
+              response.output.payload.data = response.data ? response.data : undefined;
+              request.log(['error'], response);
+              reply(response);
+            }
+          }
+
+          // Provide configuration in requests
+          );_this.server.decorate('request', 'config', _this.config
+
+          // Start server
+          );return (0, _utils.promisify)(_this.server.start, _this.server)();
+        }).then(function () {
+          // Set loggers
+          _this.config.logger = _this.server.log.bind(_this.server);
+          _Pool2['default'].logger = _this.server.log.bind(_this.server
+
+          // Let's go
+          );_this.server.log(['debug'], 'Server running at: ' + String(_this.server.info.uri));
+        });
+      }
+
+      return start;
+    }()
+  }]);
+
+  return Server;
+}();
+
+exports['default'] = Server;
+
+/***/ }),
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _rfc = __webpack_require__(12);
+var _rfc = __webpack_require__(10);
 
 var _rfc2 = _interopRequireDefault(_rfc);
 
@@ -1224,7 +1218,7 @@ exports['default'] = _rfc2['default']; /*
                                        */
 
 /***/ }),
-/* 12 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 Object.defineProperty(exports, "__esModule", {
@@ -1249,7 +1243,7 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          */
 
-var _joi = __webpack_require__(5);
+var _joi = __webpack_require__(4);
 
 var _joi2 = _interopRequireDefault(_joi);
 
@@ -1356,22 +1350,22 @@ exports['default'] = [
 }];
 
 /***/ }),
-/* 13 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(14).install();
+__webpack_require__(12).install();
 
 
 /***/ }),
-/* 14 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var SourceMapConsumer = __webpack_require__(22).SourceMapConsumer;
-var path = __webpack_require__(4);
+var path = __webpack_require__(5);
 
 var fs;
 try {
-  fs = __webpack_require__(3);
+  fs = __webpack_require__(14);
   if (!fs.existsSync || !fs.readFileSync) {
     // fs doesn't have all methods we need
     fs = null;
@@ -1838,7 +1832,7 @@ exports.install = function(options) {
   if (options.hookRequire && !isInBrowser()) {
     var Module;
     try {
-      Module = __webpack_require__(19);
+      Module = __webpack_require__(18);
     } catch (err) {
       // NOP: Loading in catch block to convert webpack error to warning.
     }
@@ -1887,34 +1881,46 @@ exports.install = function(options) {
 
 
 /***/ }),
-/* 15 */
+/* 13 */
 /***/ (function(module, exports) {
 
 module.exports = require("error-subclass");
 
 /***/ }),
-/* 16 */
+/* 14 */
+/***/ (function(module, exports) {
+
+module.exports = require("fs");
+
+/***/ }),
+/* 15 */
 /***/ (function(module, exports) {
 
 module.exports = require("good");
 
 /***/ }),
-/* 17 */
+/* 16 */
 /***/ (function(module, exports) {
 
 module.exports = require("hapi");
 
 /***/ }),
-/* 18 */
+/* 17 */
 /***/ (function(module, exports) {
 
 module.exports = require("hapi-boom-decorators");
 
 /***/ }),
-/* 19 */
+/* 18 */
 /***/ (function(module, exports) {
 
 module.exports = require("module");
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports) {
+
+module.exports = require("node-rfc");
 
 /***/ }),
 /* 20 */

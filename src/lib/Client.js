@@ -27,6 +27,7 @@ export default makeLoggable(
     connectTime: ?number = null
     numberOfInvokes: number = 0
 
+
     static options: Object = {
       connectTimeout: 5 * 1000,
       invokeTimeout: 30 * 1000,

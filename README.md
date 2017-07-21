@@ -1,5 +1,7 @@
 ![r3connect](https://cdn.rawgit.com/hundeloh-consulting/r3connect/master/logo.svg)
 
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+
 _r3connect_ is a lean wrapper of [node-rfc](https://github.com/SAP/node-rfc/) that provides comfortable access to SAP back-ends via a simple REST API or via a Promise-based API.
 All remote function calls are handled via connection pools in order to reuse connections as much as possible and run function calls in parallel. 
 Technical errors are prettified and mapped to corresponding HTTP responses. 
@@ -198,7 +200,7 @@ Afterwards kick-start your first _r3connect_ project by running:
 r3connect init
 ```
 
-This should initialize your project folder with all necessary files to start with. If you want to create the _Docker_ file run:
+This should initialize your project folder with all necessary files to start with. If you want to create the _Docker_ container, run:
 
 ```
 r3connect docker

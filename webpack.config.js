@@ -7,30 +7,29 @@ module.exports = {
   target: 'node',
   entry: {
     index: path.resolve('./src/index.js'),
-    CLI: path.resolve('./src/CLI.js'),
+    cli: path.resolve('./src/cli.js')
   },
   output: {
     path: path.resolve('./build/'),
     filename: '[name].js',
-    libraryTarget: 'commonjs2',
+    libraryTarget: 'commonjs2'
   },
   node: {
-    __dirname: true,
+    __filename: false,
+    __dirname: false
   },
   resolve: {
-    modules: ['node_modules'],
+    modules: ['node_modules']
   },
   externals: [
-    'noderfc',
     // Non-relative module (i.e. node_modules)
-    /^[a-z\-0-9]+$/,
+    /^[a-z\-0-9]+$/
   ],
   plugins: [
-    // new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.NoEmitOnErrorsPlugin(),
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-    }),
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+    })
   ],
   module: {
     rules: [
@@ -42,19 +41,19 @@ module.exports = {
             loader: 'babel-loader',
             options: JSON.stringify({
               babelrc: true,
-              cacheDirectory: true,
-            }),
-          },
-        ],
+              cacheDirectory: true
+            })
+          }
+        ]
       },
       {
         test: /\.json?$/,
         use: [
           {
-            loader: 'json-loader',
-          },
-        ],
-      },
-    ],
-  },
+            loader: 'json-loader'
+          }
+        ]
+      }
+    ]
+  }
 }
