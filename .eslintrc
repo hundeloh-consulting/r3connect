@@ -1,0 +1,29 @@
+{
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true,
+      "modules": true,
+      "classes": true
+    },
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true
+  },
+  "parser": "babel-eslint",
+  "extends": "airbnb-base",
+  "rules": {
+    "semi": [
+      2,
+      "never"
+    ],
+    "max-len": 0,
+    "newline-per-chained-call": [
+      0,
+      {
+        "ignoreChainWithDepth": 4
+      }
+    ]
+  }
+}

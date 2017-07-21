@@ -1,0 +1,16 @@
+*.trc
+.DS_Store
+*.tmp
+*.log
+.idea
+*.iml
+*.exp
+*.lib
+.deps
+obj.target
+node_modules
+doc/_build
+.deps
+logs
+*.log
+npm-debug.log*

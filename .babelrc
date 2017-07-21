@@ -1,0 +1,18 @@
+{
+  "presets": [
+    "airbnb"
+  ],
+  "plugins": [
+    "transform-class-properties",
+    [
+      "typecheck",
+      {
+        "disable": {
+          "production": true
+        }
+      }
+    ],
+    "syntax-flow",
+    "transform-flow-strip-types"
+  ]
+}
