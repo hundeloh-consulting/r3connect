@@ -84,7 +84,7 @@ describe('Client', () => {
       const configuration: Object = Object.assign({}, defaultConfiguration, {
         username: 'SUCCESS',
       })
-      expect(Client.connect(configuration, () => { })).to.be.a('Promise')
+      expect(Client.connect(configuration, () => {})).to.be.a('Promise')
     })
 
     it('returns an instance of itself if connection was successful', (
@@ -93,7 +93,7 @@ describe('Client', () => {
       const configuration: Object = Object.assign({}, defaultConfiguration, {
         username: 'SUCCESS',
       })
-      Client.connect(configuration, () => { })
+      Client.connect(configuration, () => {})
         .then((client: Object) => {
           expect(client).to.be.instanceOf(Client)
           done()
@@ -107,7 +107,7 @@ describe('Client', () => {
       const configuration: Object = Object.assign({}, defaultConfiguration, {
         username: 'FAIL',
       })
-      Client.connect(configuration, () => { })
+      Client.connect(configuration, () => {})
         .then(() => {
           done(
             new Error(
@@ -126,7 +126,7 @@ describe('Client', () => {
       const configuration: Object = Object.assign({}, defaultConfiguration, {
         username: 'DELAY',
       })
-      Client.connect(configuration, () => { })
+      Client.connect(configuration, () => {})
         .then(() => {
           done(new Error('Returned successful though it should have failed'))
         })
@@ -139,7 +139,7 @@ describe('Client', () => {
   describe('invoke', () => {
     it('returns a promise', (done: Function) => {
       const configuration: Object = Object.assign({}, defaultConfiguration)
-      Client.connect(configuration, () => { })
+      Client.connect(configuration, () => {})
         .then((client: Object) => {
           expect(client.invoke('SUCCESS')).to.be.a('Promise')
           done()
@@ -181,7 +181,7 @@ describe('Client', () => {
       const configuration: Object = Object.assign({}, defaultConfiguration, {
         username: 'SUCCESS',
       })
-      Client.connect(configuration, () => { })
+      Client.connect(configuration, () => {})
         .then((client: Object): Promise => client.invoke('DELAY'))
         .then(() => {
           done(new Error('Returned successful though it should have failed'))
