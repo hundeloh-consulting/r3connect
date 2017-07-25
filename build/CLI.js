@@ -125,10 +125,10 @@ function promisify(func, boundObject) {
           setTimeout(checkReturn, 10);
         }
       };
-      setTimeout(checkReturn, 10
+      setTimeout(checkReturn, 10);
 
       // Create the last argument: the generic callback function
-      );var callback = function callback(error) {
+      var callback = function callback(error) {
         for (var _len2 = arguments.length, values = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
           values[_key2 - 1] = arguments[_key2];
         }
@@ -141,10 +141,10 @@ function promisify(func, boundObject) {
           // resolve(values)
         }
       };
-      args.push(callback
+      args.push(callback);
 
       // Call function
-      );setTimeout(function () {
+      setTimeout(function () {
         try {
           if (boundObject) {
             func.bind(boundObject).apply(undefined, args);
@@ -715,13 +715,7 @@ exports['default'] = (0, _utils.makeLoggable)((_temp = _class = function () {
     key: 'invoke',
     value: function () {
       function invoke(functionModule, parameters) {
-        var _this
-
-        // Add performance information
-
-
-        // Pass on error
-        = this;
+        var _this = this;
 
         var invoke = this.nodeRFC.invoke;
         var startTime = new Date();
@@ -733,10 +727,10 @@ exports['default'] = (0, _utils.makeLoggable)((_temp = _class = function () {
         var args = [functionModule, parameters];
         var invokePromise = (0, _utils.promisify)(invoke, this.nodeRFC).apply(this.nodeRFC, args)['catch'](function (error) {
           throw _Exceptions.RFCException.parse(error, _this);
-        }
+        });
 
         // Prevent that a RFC runs forever
-        );var timeoutPromise = new Promise(function (resolve, reject) {
+        var timeoutPromise = new Promise(function (resolve, reject) {
           setTimeout(function () {
             reject(new _Exceptions.TimeoutException('The function call took too long to respond (more than ' + _this.constructor.options.invokeTimeout / 1000 + ' seconds).', {
               functionModule: functionModule
@@ -750,13 +744,19 @@ exports['default'] = (0, _utils.makeLoggable)((_temp = _class = function () {
               result = _ref2[0];
 
           // Release resource
-          _this.release(_this);return Promise.all([result, {
+          _this.release(_this);
+
+          // Add performance information
+          return Promise.all([result, {
             invokeTime: new Date() - startTime,
             connectTime: _this.numberOfInvokes === 1 ? _this.connectTime : 0
           }]);
         })['catch'](function (error) {
           // Release resource
-          _this.release(_this);throw error;
+          _this.release(_this);
+
+          // Pass on error
+          throw error;
         });
       }
 
@@ -790,10 +790,10 @@ exports['default'] = (0, _utils.makeLoggable)((_temp = _class = function () {
           return client;
         })['catch'](function (error) {
           throw _Exceptions.LogonException.parse(error, Object.assign({}, configuration, { password: '********' }));
-        }
+        });
 
         // Prevent that a RFC runs forever
-        );var timeoutPromise = new Promise(function (resolve, reject) {
+        var timeoutPromise = new Promise(function (resolve, reject) {
           setTimeout(function () {
             reject(new _Exceptions.TimeoutException('The system took too long to respond (more than ' + _this2.options.connectTimeout / 1000 + ' seconds).', Object.assign({}, configuration, { password: '********' })));
           }, _this2.options.connectTimeout);
@@ -931,10 +931,10 @@ exports['default'] = (0, _utils.makeLoggable)(function () {
     key: 'get',
     value: function () {
       function get(path) {
-        var value = (0, _utils.findByPath)(this.config, path
+        var value = (0, _utils.findByPath)(this.config, path);
 
         // Take value from fallback configuration if it was not found
-        );if (value === undefined) {
+        if (value === undefined) {
           value = (0, _utils.findByPath)(this.fallbackConfig, path);
         } else if ((0, _utils.isFunction)(value)) {
           // Allow extensibility by calling the function with the fallback value
@@ -983,10 +983,10 @@ exports['default'] = (0, _utils.makeLoggable)(function () {
             })
           }))
         });
-        var result = _joi2['default'].validate(config, schema
+        var result = _joi2['default'].validate(config, schema);
 
         // Provide details about the failed validation
-        );if (result.error) {
+        if (result.error) {
           throw result.error;
         }
 
@@ -1077,10 +1077,10 @@ var Server = function () {
             request: ['error',  false ? 'debug' : null].filter(Boolean)
           }
         });
-        server.connection(this.config.get('server')
+        server.connection(this.config.get('server'));
 
         // Add routes
-        );_routes2['default'].forEach(function (route) {
+        _routes2['default'].forEach(function (route) {
           return server.route(route);
         });
 
@@ -1159,20 +1159,20 @@ var Server = function () {
               request.log(['error'], response);
               reply(response);
             }
-          }
+          });
 
           // Provide configuration in requests
-          );_this.server.decorate('request', 'config', _this.config
+          _this.server.decorate('request', 'config', _this.config);
 
           // Start server
-          );return (0, _utils.promisify)(_this.server.start, _this.server)();
+          return (0, _utils.promisify)(_this.server.start, _this.server)();
         }).then(function () {
           // Set loggers
           _this.config.logger = _this.server.log.bind(_this.server);
-          _Pool2['default'].logger = _this.server.log.bind(_this.server
+          _Pool2['default'].logger = _this.server.log.bind(_this.server);
 
           // Let's go
-          );_this.server.log(['debug'], 'Server running at: ' + String(_this.server.info.uri));
+          _this.server.log(['debug'], 'Server running at: ' + String(_this.server.info.uri));
         });
       }
 
@@ -2055,9 +2055,9 @@ exports['default'] = function (requirex) {
   function loadConfig(file) {
     var loadedConfig = null;
     try {
-      var content = _fsExtra2['default'].readFileSync(file, 'utf8'
+      var content = _fsExtra2['default'].readFileSync(file, 'utf8');
       // eslint-disable-next-line no-eval
-      );loadedConfig = eval(content);
+      loadedConfig = eval(content);
     } catch (error) {
       loadedConfig = null;
     }
@@ -2066,11 +2066,11 @@ exports['default'] = function (requirex) {
 
   // Welcome
   /* eslint-disable */
-  logger.log('\n      ____                                  _   \n      |___                                 | |  \n  _ __ __) | ___ ___  _ __  _ __   ___  ___| |_ \n  | \'__|__ < / __/ _ | \'_ | \'_  / _ / __| __|\n  | |  ___) | (_| (_) | | | | | | |  __/ (__| |_ \n  |_| |____/ ______/|_| |_|_| |_|___|___|__|\n  '
+  logger.log('\n      ____                                  _   \n      |___                                 | |  \n  _ __ __) | ___ ___  _ __  _ __   ___  ___| |_ \n  | \'__|__ < / __/ _ | \'_ | \'_  / _ / __| __|\n  | |  ___) | (_| (_) | | | | | | |  __/ (__| |_ \n  |_| |____/ ______/|_| |_|_| |_|___|___|__|\n  ');
   /* eslint-enable */
 
   // Get package
-  );var project = null;
+  var project = null;
   try {
     project = JSON.parse(_fsExtra2['default'].readFileSync(_path2['default'].join(process.cwd(), 'package.json')));
   } catch (error) {
@@ -2183,10 +2183,10 @@ exports['default'] = function (requirex) {
 
               // Start server with configuration
               var server = new _index.Server(config);
-              server.start
+              server.start();
 
               // Update configuration in server if the file changes
-              ();_fsExtra2['default'].watch(pathToConfig, function () {
+              _fsExtra2['default'].watch(pathToConfig, function () {
                 return config.set(loadConfig(pathToConfig));
               });
 
@@ -2195,21 +2195,21 @@ exports['default'] = function (requirex) {
 
           case 'docker':
             {
-              var port = config.get('server.port'
+              var port = config.get('server.port');
 
               // Build docker container
-              );var spawn = _child_process2['default'].spawn;
-              var docker = spawn('docker', ['build', '--build-arg R3CONNECT_PORT=' + String(port), '-t', project.name, '.']
+              var spawn = _child_process2['default'].spawn;
+              var docker = spawn('docker', ['build', '--build-arg R3CONNECT_PORT=' + String(port), '-t', project.name, '.']);
 
               // Once it is ready
-              );docker.on('close', function (code) {
+              docker.on('close', function (code) {
                 if (code === 0) {
                   logger.success('The Docker container was successfully built. Start the container by running "docker run -it -p ' + String(port) + ':' + String(port) + ' ' + String(project.name) + '".');
                 }
-              }
+              });
 
               // Or it failed?
-              );docker.on('error', function () {
+              docker.on('error', function () {
                 logger.error('There was an issue while building the Docker container. Please install Docker first and check the Docker logs in order to solve the issue.');
               });
 
