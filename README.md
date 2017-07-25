@@ -48,7 +48,7 @@ const configuration = {
 
 // Acquire client from pool
 r3connect.Pool.get(configuration).acquire()
-.then(function (client: Object) {
+.then(function (client) {
   // Actually call the back-end
   return client.invoke('RSIM_RFC_CONNECTION_TEST', { 
     iv_test: 'test'
