@@ -18,7 +18,8 @@
     "dev": "better-npm-run dev",
     "test": "better-npm-run test",
     "format": "better-npm-run format",
-    "precommit": "npm run test && npm run format && npm run build && git add build",
+    "lint": "better-npm-run lint",
+    "precommit": "npm run test && npm run format && npm run lint && npm run build && git add build",
     "commitmsg": "validate-commit-msg",
     "postmerge": "npm install",
     "postrewrite": "npm install"
@@ -46,7 +47,13 @@
       }
     },
     "format": {
-      "command": "prettier-standard 'src/**/*.js'",
+      "command": "prettier 'src/**/*.js'",
+      "env": {
+        "NODE_ENV": "production"
+      }
+    },
+    "lint": {
+      "command": "standard 'src/**/*.js'",
       "env": {
         "NODE_ENV": "production"
       }
@@ -54,7 +61,8 @@
   },
   "lint-staged": {
     "*.js": [
-      "prettier-standard",
+      "prettier",
+      "standard",
       "git add"
     ]
   },
@@ -111,8 +119,10 @@
     "json-loader": "^0.5.4",
     "lint-staged": "^3.6.1",
     "mocha": "^3.4.2",
+    "prettier": "^1.5.3",
     "prettier-standard": "^6.0.0",
     "rimraf": "^2.5.4",
+    "standard": "^10.0.2",
     "validate-commit-msg": "^2.12.2",
     "webpack": "^2.6.1"
   }
