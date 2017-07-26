@@ -69,7 +69,10 @@ module.exports =
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -166,21 +169,17 @@ function pad(input, length) {
 }
 
 function makeLoggable(object) {
-  var log = function () {
-    function log(tag, data, details) {
-      if (this.logger) {
-        var scope = this.name || this.constructor.name;
-        var tags = Array.isArray(tag) ? [scope].concat(tag) : [scope, tag];
-        this.logger(tags, data);
+  var log = function log(tag, data, details) {
+    if (this.logger) {
+      var scope = this.name || this.constructor.name;
+      var tags = Array.isArray(tag) ? [scope].concat(tag) : [scope, tag];
+      this.logger(tags, data);
 
-        if (details) {
-          this.logger(tags, details);
-        }
+      if (details) {
+        this.logger(tags, details);
       }
     }
-
-    return log;
-  }();
+  };
 
   // Add log function to class and prototype
   Object.assign(object, {
@@ -219,13 +218,16 @@ function removeUndefinedValues(object) {
 
 function isListed(list, searchValue) {
   return list.some(function (value) {
-    return !!searchValue.match(new RegExp('^' + String(value.split('*').join('(.*)')) + '$'));
+    return !!searchValue.match(new RegExp('^' + value.split('*').join('(.*)') + '$'));
   });
 }
 
 /***/ }),
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -238,7 +240,7 @@ var _errorSubclass = __webpack_require__(13);
 
 var _errorSubclass2 = _interopRequireDefault(_errorSubclass);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -283,7 +285,7 @@ var HttpException = exports.HttpException = function (_ErrorSubclass) {
   }
 
   return HttpException;
-}(_errorSubclass2['default']);
+}(_errorSubclass2.default);
 
 var RFCException = exports.RFCException = function (_HttpException) {
   _inherits(RFCException, _HttpException);
@@ -301,61 +303,53 @@ var RFCException = exports.RFCException = function (_HttpException) {
 
   _createClass(RFCException, null, [{
     key: 'parse',
-    value: function () {
-      function parse(error, context, client) {
-        var key = error.key;
-        var message = null;
+    value: function parse(error, context, client) {
+      var key = error.key;
+      var message = null;
 
-        // Translate code to message
-        var code = parseInt(error.code, 10);
-        switch (code) {
-          case 1:
-            {
-              var parsedMessage = this.parseMessage(error.message);
-              var prefix = parsedMessage['ERRNO TEXT'] ? String(parsedMessage['ERRNO TEXT']) + ': ' : '';
-              message = '' + prefix + String(parsedMessage.ERROR);
-              break;
-            }
+      // Translate code to message
+      var code = parseInt(error.code, 10);
+      switch (code) {
+        case 1:
+          {
+            var parsedMessage = this.parseMessage(error.message);
+            var prefix = parsedMessage['ERRNO TEXT'] ? parsedMessage['ERRNO TEXT'] + ': ' : '';
+            message = '' + prefix + parsedMessage.ERROR;
+            break;
+          }
 
-          default:
-            {
-              message = error.message;
-            }
-        }
-
-        // Return result
-        var result = null;
-        if (this === RFCException) {
-          result = new this(message, 502, key, context, client);
-        } else {
-          result = new this(message, context, client);
-        }
-        return result;
+        default:
+          {
+            message = error.message;
+          }
       }
 
-      return parse;
-    }()
+      // Return result
+      var result = null;
+      if (this === RFCException) {
+        result = new this(message, 502, key, context, client);
+      } else {
+        result = new this(message, context, client);
+      }
+      return result;
+    }
   }, {
     key: 'parseMessage',
-    value: function () {
-      function parseMessage() {
-        var message = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+    value: function parseMessage() {
+      var message = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
 
-        var result = {};
-        message.split('\n').map(function (line) {
-          return line.trim();
-        }).forEach(function (line) {
-          var key = line.substring(0, 12).trim();
-          var value = line.substring(12).trim();
-          if (key) {
-            result[key] = value;
-          }
-        });
-        return result;
-      }
-
-      return parseMessage;
-    }()
+      var result = {};
+      message.split('\n').map(function (line) {
+        return line.trim();
+      }).forEach(function (line) {
+        var key = line.substring(0, 12).trim();
+        var value = line.substring(12).trim();
+        if (key) {
+          result[key] = value;
+        }
+      });
+      return result;
+    }
   }]);
 
   return RFCException;
@@ -393,6 +387,9 @@ var TimeoutException = exports.TimeoutException = function (_HttpException2) {
 /***/ }),
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -436,174 +433,138 @@ var _Exceptions = __webpack_require__(1);
 
 var _utils = __webpack_require__(0);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-exports['default'] = (0, _utils.makeLoggable)((_temp = _class = function () {
+exports.default = (0, _utils.makeLoggable)((_temp = _class = function () {
   function Pool() {
     _classCallCheck(this, Pool);
   }
 
   _createClass(Pool, null, [{
     key: 'generateHash',
-    value: function () {
-      function generateHash(configuration) {
-        return (0, _objectHash2['default'])(configuration);
-      }
-
-      return generateHash;
-    }()
+    value: function generateHash(configuration) {
+      return (0, _objectHash2.default)(configuration);
+    }
 
     // Each destination has its own pool
 
   }, {
     key: 'remove',
-    value: function () {
-      function remove(configuration) {
-        var hash = this.generateHash(configuration);
-        var pool = this.pools[hash];
+    value: function remove(configuration) {
+      var hash = this.generateHash(configuration);
+      var pool = this.pools[hash];
 
-        if (pool) {
-          pool.end();
-          this.pools[hash] = undefined;
-          this.log('debug', 'Removed connection pool "' + String(hash) + '" for host "' + String(configuration.applicationServer) + '".');
-        }
+      if (pool) {
+        pool.end();
+        this.pools[hash] = undefined;
+        this.log('debug', 'Removed connection pool "' + hash + '" for host "' + configuration.applicationServer + '".');
       }
-
-      return remove;
-    }()
+    }
   }, {
     key: 'create',
-    value: function () {
-      function create(configuration, logger) {
-        var _this = this;
+    value: function create(configuration, logger) {
+      var _this = this;
 
-        var lastError = null;
-        var pool = new _pool2['default'](Object.assign({
-          acquire: function () {
-            function acquire(callback) {
-              _this.log('debug', 'Start acquiring connection for "' + String(configuration.applicationServer) + '".');
+      var lastError = null;
+      var pool = new _pool2.default(Object.assign({
+        acquire: function acquire(callback) {
+          _this.log('debug', 'Start acquiring connection for "' + configuration.applicationServer + '".');
 
-              try {
-                var boundRelease = pool.release.bind(pool);
-                _this.Client.connect(configuration, boundRelease, logger).then(function (client) {
-                  callback(null, client);
-                })['catch'](function (error) {
-                  // Check if error occurred in a client
-                  if (error.client) {
-                    // Release client from pool so it doesn't block future requests
-                    if (error.code && error.code.startsWith('RFC_')) {
-                      pool.destroy(error.client);
-                    } else {
-                      pool.remove(error.client);
-                    }
-                  } else {
-                    // If no connection could be established, remove the pool after some time
-                    // Any requests before are served with a cached error
-                    lastError = error;
-                    setTimeout(function () {
-                      return Pool.remove(configuration);
-                    }, _this.options.bailTimeout);
-                  }
-
-                  callback(error);
-                });
-              } catch (error) {
-                callback(error);
-              }
-            }
-
-            return acquire;
-          }(),
-
-          dispose: function () {
-            function dispose(client, callback) {
-              _this.log('debug', 'Disposing connection for "' + String(configuration.applicationServer) + '".');
-              client.close();
-              callback();
-            }
-
-            return dispose;
-          }(),
-
-          destroy: function () {
-            function destroy(client, callback) {
-              _this.log('debug', 'Destroying connection for "' + String(configuration.applicationServer) + '".');
-              callback();
-            }
-
-            return destroy;
-          }(),
-
-          ping: function () {
-            function ping(client, callback) {
-              // Asynchronously ping
-              setTimeout(function () {
-                if (client.ping()) {
-                  callback();
+          try {
+            var boundRelease = pool.release.bind(pool);
+            _this.Client.connect(configuration, boundRelease, logger).then(function (client) {
+              callback(null, client);
+            }).catch(function (error) {
+              // Check if error occurred in a client
+              if (error.client) {
+                // Release client from pool so it doesn't block future requests
+                if (error.code && error.code.startsWith('RFC_')) {
+                  pool.destroy(error.client);
                 } else {
-                  callback(new _Exceptions.TimeoutException('Ping to "' + String(configuration.applicationServer) + '" failed.'));
+                  pool.remove(error.client);
                 }
-              }, 0);
-            }
+              } else {
+                // If no connection could be established, remove the pool after some time
+                // Any requests before are served with a cached error
+                lastError = error;
+                setTimeout(function () {
+                  return Pool.remove(configuration);
+                }, _this.options.bailTimeout);
+              }
 
-            return ping;
-          }()
-        }, this.options));
-
-        // Promisify acquire and return last error if present
-        // Otherwise a generic error from pool2 would be thrown
-        var originalAcquire = pool.acquire.bind(pool);
-        pool.acquire = function () {
-          function acquire() {
-            return (0, _utils.promisify)(originalAcquire, pool)().then(function (_ref) {
-              var _ref2 = _slicedToArray(_ref, 1),
-                  client = _ref2[0];
-
-              return client;
-            })['catch'](function (error) {
-              throw lastError || error;
+              callback(error);
             });
+          } catch (error) {
+            callback(error);
           }
+        },
 
-          return acquire;
-        }();
+        dispose: function dispose(client, callback) {
+          _this.log('debug', 'Disposing connection for "' + configuration.applicationServer + '".');
+          client.close();
+          callback();
+        },
 
-        // Catch all generic errors
-        pool.on('error', function (error) {
-          if (!error.code) {
-            _this.log('error', 'An error occured in pool "' + String(configuration.applicationServer) + '".', error);
-          }
+        destroy: function destroy(client, callback) {
+          _this.log('debug', 'Destroying connection for "' + configuration.applicationServer + '".');
+          callback();
+        },
+
+        ping: function ping(client, callback) {
+          // Asynchronously ping
+          setTimeout(function () {
+            if (client.ping()) {
+              callback();
+            } else {
+              callback(new _Exceptions.TimeoutException('Ping to "' + configuration.applicationServer + '" failed.'));
+            }
+          }, 0);
+        }
+      }, this.options));
+
+      // Promisify acquire and return last error if present
+      // Otherwise a generic error from pool2 would be thrown
+      var originalAcquire = pool.acquire.bind(pool);
+      pool.acquire = function acquire() {
+        return (0, _utils.promisify)(originalAcquire, pool)().then(function (_ref) {
+          var _ref2 = _slicedToArray(_ref, 1),
+              client = _ref2[0];
+
+          return client;
+        }).catch(function (error) {
+          throw lastError || error;
         });
+      };
 
-        return pool;
-      }
+      // Catch all generic errors
+      pool.on('error', function (error) {
+        if (!error.code) {
+          _this.log('error', 'An error occured in pool "' + configuration.applicationServer + '".', error);
+        }
+      });
 
-      return create;
-    }()
+      return pool;
+    }
   }, {
     key: 'get',
-    value: function () {
-      function get(configuration, logger) {
-        var hash = this.generateHash(configuration);
-        var connection = null;
+    value: function get(configuration, logger) {
+      var hash = this.generateHash(configuration);
+      var connection = null;
 
-        // Reuse pool once it was created for a specific configuration
-        if (this.pools[hash]) {
-          connection = this.pools[hash];
-          this.log('debug', 'Reuse connection pool "' + String(hash) + '" of host "' + String(configuration.applicationServer) + '".');
-        } else {
-          connection = this.create(configuration, logger);
-          this.pools[hash] = connection;
-          this.log('debug', 'Added connection pool "' + String(hash) + '" for host "' + String(configuration.applicationServer) + '".');
-        }
-
-        return connection;
+      // Reuse pool once it was created for a specific configuration
+      if (this.pools[hash]) {
+        connection = this.pools[hash];
+        this.log('debug', 'Reuse connection pool "' + hash + '" of host "' + configuration.applicationServer + '".');
+      } else {
+        connection = this.create(configuration, logger);
+        this.pools[hash] = connection;
+        this.log('debug', 'Added connection pool "' + hash + '" for host "' + configuration.applicationServer + '".');
       }
 
-      return get;
-    }()
+      return connection;
+    }
   }]);
 
   return Pool;
@@ -626,11 +587,14 @@ exports['default'] = (0, _utils.makeLoggable)((_temp = _class = function () {
   },
   bailAfter: 1,
   bailTimeout: 30 * 1000
-}, _class.Client = _Client2['default'], _temp));
+}, _class.Client = _Client2.default, _temp));
 
 /***/ }),
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -664,20 +628,16 @@ var _utils = __webpack_require__(0);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-exports['default'] = (0, _utils.makeLoggable)((_temp = _class = function () {
+exports.default = (0, _utils.makeLoggable)((_temp = _class = function () {
   _createClass(Client, null, [{
     key: 'NodeRFC',
 
 
     // Needs to be required as it could throw an exception if it was not built correctly
-    get: function () {
-      function get() {
-        // eslint-disable-next-line global-require, import/no-unresolved
-        return __webpack_require__(19).Client;
-      }
-
-      return get;
-    }()
+    get: function get() {
+      // eslint-disable-next-line global-require, import/no-unresolved
+      return __webpack_require__(19).Client;
+    }
   }]);
 
   function Client(nodeRFC, release) {
@@ -695,116 +655,100 @@ exports['default'] = (0, _utils.makeLoggable)((_temp = _class = function () {
 
   _createClass(Client, [{
     key: 'close',
-    value: function () {
-      function close() {
-        return this.nodeRFC.close.apply(this.nodeRFC);
-      }
-
-      return close;
-    }()
+    value: function close() {
+      return this.nodeRFC.close.apply(this.nodeRFC);
+    }
   }, {
     key: 'ping',
-    value: function () {
-      function ping() {
-        return this.nodeRFC.ping.apply(this.nodeRFC);
-      }
-
-      return ping;
-    }()
+    value: function ping() {
+      return this.nodeRFC.ping.apply(this.nodeRFC);
+    }
   }, {
     key: 'invoke',
-    value: function () {
-      function invoke(functionModule, parameters) {
-        var _this = this;
+    value: function invoke(functionModule, parameters) {
+      var _this = this;
 
-        var invoke = this.nodeRFC.invoke;
-        var startTime = new Date();
+      var invoke = this.nodeRFC.invoke;
+      var startTime = new Date();
 
-        // Keep track of invokes
-        this.numberOfInvokes = this.numberOfInvokes + 1;
+      // Keep track of invokes
+      this.numberOfInvokes = this.numberOfInvokes + 1;
 
-        // Call system
-        var args = [functionModule, parameters];
-        var invokePromise = (0, _utils.promisify)(invoke, this.nodeRFC).apply(this.nodeRFC, args)['catch'](function (error) {
-          throw _Exceptions.RFCException.parse(error, _this);
-        });
+      // Call system
+      var args = [functionModule, parameters];
+      var invokePromise = (0, _utils.promisify)(invoke, this.nodeRFC).apply(this.nodeRFC, args).catch(function (error) {
+        throw _Exceptions.RFCException.parse(error, _this);
+      });
 
-        // Prevent that a RFC runs forever
-        var timeoutPromise = new Promise(function (resolve, reject) {
-          setTimeout(function () {
-            reject(new _Exceptions.TimeoutException('The function call took too long to respond (more than ' + _this.constructor.options.invokeTimeout / 1000 + ' seconds).', {
-              functionModule: functionModule
-            }, _this));
-          }, _this.constructor.options.invokeTimeout);
-        });
+      // Prevent that a RFC runs forever
+      var timeoutPromise = new Promise(function (resolve, reject) {
+        setTimeout(function () {
+          reject(new _Exceptions.TimeoutException('The function call took too long to respond (more than ' + _this.constructor.options.invokeTimeout / 1000 + ' seconds).', {
+            functionModule: functionModule
+          }, _this));
+        }, _this.constructor.options.invokeTimeout);
+      });
 
-        // Whoever finishes first wins the race
-        return Promise.race([invokePromise, timeoutPromise]).then(function (_ref) {
-          var _ref2 = _slicedToArray(_ref, 1),
-              result = _ref2[0];
+      // Whoever finishes first wins the race
+      return Promise.race([invokePromise, timeoutPromise]).then(function (_ref) {
+        var _ref2 = _slicedToArray(_ref, 1),
+            result = _ref2[0];
 
-          // Release resource
-          _this.release(_this);
+        // Release resource
+        _this.release(_this);
 
-          // Add performance information
-          return Promise.all([result, {
-            invokeTime: new Date() - startTime,
-            connectTime: _this.numberOfInvokes === 1 ? _this.connectTime : 0
-          }]);
-        })['catch'](function (error) {
-          // Release resource
-          _this.release(_this);
+        // Add performance information
+        return Promise.all([result, {
+          invokeTime: new Date() - startTime,
+          connectTime: _this.numberOfInvokes === 1 ? _this.connectTime : 0
+        }]);
+      }).catch(function (error) {
+        // Release resource
+        _this.release(_this);
 
-          // Pass on error
-          throw error;
-        });
-      }
-
-      return invoke;
-    }()
+        // Pass on error
+        throw error;
+      });
+    }
   }], [{
     key: 'connect',
-    value: function () {
-      function connect(configuration, release, logger) {
-        var _this2 = this;
+    value: function connect(configuration, release, logger) {
+      var _this2 = this;
 
-        var nodeRFC = new this.NodeRFC((0, _utils.removeUndefinedValues)({
-          ashost: configuration.applicationServer,
-          sysnr: (0, _utils.pad)(configuration.instanceNumber, 2, '0'),
-          client: (0, _utils.pad)(configuration.client, 3, '0'),
-          saprouter: configuration.router,
-          user: configuration.username,
-          passwd: configuration.password,
-          MYSAPSSO2: configuration.mysapsso2,
-          trace: '0'
-        }));
-        var connect = nodeRFC.connect;
-        var startTime = new Date();
+      var nodeRFC = new this.NodeRFC((0, _utils.removeUndefinedValues)({
+        ashost: configuration.applicationServer,
+        sysnr: (0, _utils.pad)(configuration.instanceNumber, 2, '0'),
+        client: (0, _utils.pad)(configuration.client, 3, '0'),
+        saprouter: configuration.router,
+        user: configuration.username,
+        passwd: configuration.password,
+        MYSAPSSO2: configuration.mysapsso2,
+        trace: '0'
+      }));
+      var connect = nodeRFC.connect;
+      var startTime = new Date();
 
-        // Connect to system
-        var connectPromise = (0, _utils.promisify)(connect, nodeRFC).apply(nodeRFC).then(function () {
-          // Create client
-          var client = new Client(nodeRFC, release);
-          client.logger = logger;
-          client.connectTime = new Date() - startTime;
-          return client;
-        })['catch'](function (error) {
-          throw _Exceptions.LogonException.parse(error, Object.assign({}, configuration, { password: '********' }));
-        });
+      // Connect to system
+      var connectPromise = (0, _utils.promisify)(connect, nodeRFC).apply(nodeRFC).then(function () {
+        // Create client
+        var client = new Client(nodeRFC, release);
+        client.logger = logger;
+        client.connectTime = new Date() - startTime;
+        return client;
+      }).catch(function (error) {
+        throw _Exceptions.LogonException.parse(error, Object.assign({}, configuration, { password: '********' }));
+      });
 
-        // Prevent that a RFC runs forever
-        var timeoutPromise = new Promise(function (resolve, reject) {
-          setTimeout(function () {
-            reject(new _Exceptions.TimeoutException('The system took too long to respond (more than ' + _this2.options.connectTimeout / 1000 + ' seconds).', Object.assign({}, configuration, { password: '********' })));
-          }, _this2.options.connectTimeout);
-        });
+      // Prevent that a RFC runs forever
+      var timeoutPromise = new Promise(function (resolve, reject) {
+        setTimeout(function () {
+          reject(new _Exceptions.TimeoutException('The system took too long to respond (more than ' + _this2.options.connectTimeout / 1000 + ' seconds).', Object.assign({}, configuration, { password: '********' })));
+        }, _this2.options.connectTimeout);
+      });
 
-        // Whoever finishes first wins the race
-        return Promise.race([connectPromise, timeoutPromise]);
-      }
-
-      return connect;
-    }()
+      // Whoever finishes first wins the race
+      return Promise.race([connectPromise, timeoutPromise]);
+    }
   }]);
 
   return Client;
@@ -828,6 +772,9 @@ module.exports = require("path");
 /* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
+
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -849,25 +796,28 @@ var _Server2 = __webpack_require__(8);
 
 var _Server3 = _interopRequireDefault(_Server2);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var r3connect = {
-  Client: _Client3['default'],
-  Configuration: _Configuration3['default'],
-  Pool: _Pool3['default'],
-  Server: _Server3['default']
+  Client: _Client3.default,
+  Configuration: _Configuration3.default,
+  Pool: _Pool3.default,
+  Server: _Server3.default
 };
 
-exports['default'] = r3connect;
-var Client = exports.Client = _Client3['default'];
-var Configuration = exports.Configuration = _Configuration3['default'];
-var Server = exports.Server = _Server3['default'];
-var Pool = exports.Pool = _Pool3['default'];
+exports.default = r3connect;
+var Client = exports.Client = _Client3.default;
+var Configuration = exports.Configuration = _Configuration3.default;
+var Server = exports.Server = _Server3.default;
+var Pool = exports.Pool = _Pool3.default;
 module.exports = r3connect;
 
 /***/ }),
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -881,11 +831,11 @@ var _joi2 = _interopRequireDefault(_joi);
 
 var _utils = __webpack_require__(0);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-exports['default'] = (0, _utils.makeLoggable)(function () {
+exports.default = (0, _utils.makeLoggable)(function () {
   function Configuration(config, fallbackConfig) {
     _classCallCheck(this, Configuration);
 
@@ -898,103 +848,91 @@ exports['default'] = (0, _utils.makeLoggable)(function () {
 
   _createClass(Configuration, [{
     key: 'set',
-    value: function () {
-      function set(content) {
-        if (!content) {
-          this.log('error', 'The configuration provided is empty and hence the standard configuration file will be used.');
-          this.config = this.fallbackConfig;
+    value: function set(content) {
+      if (!content) {
+        this.log('error', 'The configuration provided is empty and hence the standard configuration file will be used.');
+        this.config = this.fallbackConfig;
+      } else {
+        var config = null;
+
+        // Content could be an extension or a config
+        if (typeof content === 'function') {
+          config = content(this.fallbackConfig);
         } else {
-          var config = null;
+          config = content;
+        }
 
-          // Content could be an extension or a config
-          if (typeof content === 'function') {
-            config = content(this.fallbackConfig);
-          } else {
-            config = content;
-          }
-
-          // Validate configuration against the defined schema
-          try {
-            Configuration.validate(config);
-            this.log('debug', 'Successfully reloaded configuration.');
-            this.config = config;
-          } catch (error) {
-            this.log('error', 'Unfortunately the new configuration does not follow the allowed schema and thus the old configuration wil be kept. The error was: ' + String(error.message));
-            this.config = this.config || this.fallbackConfig;
-          }
+        // Validate configuration against the defined schema
+        try {
+          Configuration.validate(config);
+          this.log('debug', 'Successfully reloaded configuration.');
+          this.config = config;
+        } catch (error) {
+          this.log('error', 'Unfortunately the new configuration does not follow the allowed schema and thus the old configuration wil be kept. The error was: ' + error.message);
+          this.config = this.config || this.fallbackConfig;
         }
       }
-
-      return set;
-    }()
+    }
   }, {
     key: 'get',
-    value: function () {
-      function get(path) {
-        var value = (0, _utils.findByPath)(this.config, path);
+    value: function get(path) {
+      var value = (0, _utils.findByPath)(this.config, path);
 
-        // Take value from fallback configuration if it was not found
-        if (value === undefined) {
-          value = (0, _utils.findByPath)(this.fallbackConfig, path);
-        } else if ((0, _utils.isFunction)(value)) {
-          // Allow extensibility by calling the function with the fallback value
-          var fallbackValue = (0, _utils.findByPath)(this.fallbackConfig, path);
-          value = value(fallbackValue);
-        }
-
-        if (value === undefined) {
-          this.log('error', 'The requested configuration for path "' + String(path) + '" does not exist.');
-        }
-
-        return value;
+      // Take value from fallback configuration if it was not found
+      if (value === undefined) {
+        value = (0, _utils.findByPath)(this.fallbackConfig, path);
+      } else if ((0, _utils.isFunction)(value)) {
+        // Allow extensibility by calling the function with the fallback value
+        var fallbackValue = (0, _utils.findByPath)(this.fallbackConfig, path);
+        value = value(fallbackValue);
       }
 
-      return get;
-    }()
+      if (value === undefined) {
+        this.log('error', 'The requested configuration for path "' + path + '" does not exist.');
+      }
+
+      return value;
+    }
   }], [{
     key: 'validate',
-    value: function () {
-      function validate(config) {
-        var schema = _joi2['default'].object().keys({
-          server: _joi2['default'].object().keys({
-            host: _joi2['default'].string(),
-            port: _joi2['default'].number().min(1),
-            routes: _joi2['default'].object().keys({
-              cors: _joi2['default'].boolean()
-            }),
-            tls: _joi2['default'].object().keys({
-              key: _joi2['default'].binary(),
-              cert: _joi2['default'].binary()
-            })
+    value: function validate(config) {
+      var schema = _joi2.default.object().keys({
+        server: _joi2.default.object().keys({
+          host: _joi2.default.string(),
+          port: _joi2.default.number().min(1),
+          routes: _joi2.default.object().keys({
+            cors: _joi2.default.boolean()
           }),
-          logs: _joi2['default'].object().keys({
-            tags: _joi2['default'].array().items(_joi2['default'].string())
-          }),
-          connections: _joi2['default'].object().pattern(/\w+/, _joi2['default'].object().keys({
-            username: _joi2['default'].string().token().max(12).allow('').allow(null),
-            password: _joi2['default'].string().max(40).allow('').allow(null),
-            applicationServer: _joi2['default'].string().allow('').allow(null),
-            instanceNumber: _joi2['default'].number().integer().min(0).max(99),
-            client: _joi2['default'].number().integer().min(0).max(999),
-            router: _joi2['default'].string().allow('').allow(null),
-            functionModules: _joi2['default'].object().keys({
-              whitelist: _joi2['default'].array().items(_joi2['default'].string()),
-              blacklist: _joi2['default'].array().items(_joi2['default'].string())
-            })
-          }))
-        });
-        var result = _joi2['default'].validate(config, schema);
+          tls: _joi2.default.object().keys({
+            key: _joi2.default.binary(),
+            cert: _joi2.default.binary()
+          })
+        }),
+        logs: _joi2.default.object().keys({
+          tags: _joi2.default.array().items(_joi2.default.string())
+        }),
+        connections: _joi2.default.object().pattern(/\w+/, _joi2.default.object().keys({
+          username: _joi2.default.string().token().max(12).allow('').allow(null),
+          password: _joi2.default.string().max(40).allow('').allow(null),
+          applicationServer: _joi2.default.string().allow('').allow(null),
+          instanceNumber: _joi2.default.number().integer().min(0).max(99),
+          client: _joi2.default.number().integer().min(0).max(999),
+          router: _joi2.default.string().allow('').allow(null),
+          functionModules: _joi2.default.object().keys({
+            whitelist: _joi2.default.array().items(_joi2.default.string()),
+            blacklist: _joi2.default.array().items(_joi2.default.string())
+          })
+        }))
+      });
+      var result = _joi2.default.validate(config, schema);
 
-        // Provide details about the failed validation
-        if (result.error) {
-          throw result.error;
-        }
-
-        return true;
+      // Provide details about the failed validation
+      if (result.error) {
+        throw result.error;
       }
 
-      return validate;
-    }()
+      return true;
+    }
   }]);
 
   return Configuration;
@@ -1003,6 +941,9 @@ exports['default'] = (0, _utils.makeLoggable)(function () {
 /***/ }),
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -1052,7 +993,7 @@ var _routes2 = _interopRequireDefault(_routes);
 
 var _utils = __webpack_require__(0);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -1069,125 +1010,116 @@ var Server = function () {
 
   _createClass(Server, [{
     key: 'createServer',
-    value: function () {
-      function createServer() {
-        // Create server
-        var server = new _hapi2['default'].Server({
-          debug: {
-            request: ['error',  false ? 'debug' : null].filter(Boolean)
-          }
-        });
-        server.connection(this.config.get('server'));
+    value: function createServer() {
+      // Create server
+      var server = new _hapi2.default.Server({
+        debug: {
+          request: ['error',  false ? 'debug' : null].filter(Boolean)
+        }
+      });
+      server.connection(this.config.get('server'));
 
-        // Add routes
-        _routes2['default'].forEach(function (route) {
-          return server.route(route);
-        });
+      // Add routes
+      _routes2.default.forEach(function (route) {
+        return server.route(route);
+      });
 
-        return server;
-      }
-
-      return createServer;
-    }()
+      return server;
+    }
   }, {
     key: 'start',
-    value: function () {
-      function start() {
-        var _this = this;
+    value: function start() {
+      var _this = this;
 
-        // Register plugins and start the server
-        return (0, _utils.promisify)(this.server.register, this.server)([{
-          register: _good2['default'],
-          options: {
-            ops: {
-              interval: 30000
-            },
-            reporters: {
-              console: [{
-                module: 'good-squeeze',
-                name: 'Squeeze',
-                args: [{
-                  request: this.config.get('logs.tags'),
-                  log: this.config.get('logs.tags'),
-                  ops: '*'
-                }]
-              }, {
-                module: 'good-console'
-              }, 'stdout'],
-              file: [{
-                module: 'good-squeeze',
-                name: 'Squeeze',
-                args: [{
-                  log: this.config.get('logs.tags'),
-                  ops: '*'
-                }]
-              }, {
-                module: 'good-squeeze',
-                name: 'SafeJson'
-              }, {
-                module: 'good-file',
-                args: ['./logs/log']
+      // Register plugins and start the server
+      return (0, _utils.promisify)(this.server.register, this.server)([{
+        register: _good2.default,
+        options: {
+          ops: {
+            interval: 30000
+          },
+          reporters: {
+            console: [{
+              module: 'good-squeeze',
+              name: 'Squeeze',
+              args: [{
+                request: this.config.get('logs.tags'),
+                log: this.config.get('logs.tags'),
+                ops: '*'
               }]
-            }
+            }, {
+              module: 'good-console'
+            }, 'stdout'],
+            file: [{
+              module: 'good-squeeze',
+              name: 'Squeeze',
+              args: [{
+                log: this.config.get('logs.tags'),
+                ops: '*'
+              }]
+            }, {
+              module: 'good-squeeze',
+              name: 'SafeJson'
+            }, {
+              module: 'good-file',
+              args: ['./logs/log']
+            }]
           }
-        }, {
-          register: _hapiBoomDecorators2['default']
-        }]).then(function () {
-          // Error handling
-          _this.server.decorate('reply', 'error', function () {
-            function replyWithError(error) {
-              if (error instanceof _Exceptions.HttpException) {
-                var data = Object.assign({
-                  code: error.code
-                }, error.context);
-                this.boom(error.statusCode, error.message, data);
-              } else {
-                this(error);
-              }
-            }
-
-            return replyWithError;
-          }());
-          _this.server.ext('onPreResponse', function (request, reply) {
-            var response = request.response;
-
-            if (!response.isBoom) {
-              reply['continue']();
-            } else {
-              // Output details of errors
-              response.output.payload.data = response.data ? response.data : undefined;
-              request.log(['error'], response);
-              reply(response);
-            }
-          });
-
-          // Provide configuration in requests
-          _this.server.decorate('request', 'config', _this.config);
-
-          // Start server
-          return (0, _utils.promisify)(_this.server.start, _this.server)();
-        }).then(function () {
-          // Set loggers
-          _this.config.logger = _this.server.log.bind(_this.server);
-          _Pool2['default'].logger = _this.server.log.bind(_this.server);
-
-          // Let's go
-          _this.server.log(['debug'], 'Server running at: ' + String(_this.server.info.uri));
+        }
+      }, {
+        register: _hapiBoomDecorators2.default
+      }]).then(function () {
+        // Error handling
+        _this.server.decorate('reply', 'error', function replyWithError(error) {
+          if (error instanceof _Exceptions.HttpException) {
+            var data = Object.assign({
+              code: error.code
+            }, error.context);
+            this.boom(error.statusCode, error.message, data);
+          } else {
+            this(error);
+          }
         });
-      }
+        _this.server.ext('onPreResponse', function (request, reply) {
+          var response = request.response;
 
-      return start;
-    }()
+          if (!response.isBoom) {
+            reply.continue();
+          } else {
+            // Output details of errors
+            response.output.payload.data = response.data ? response.data : undefined;
+            request.log(['error'], response);
+            reply(response);
+          }
+        });
+
+        // Provide configuration in requests
+        _this.server.decorate('request', 'config', _this.config);
+
+        // Start server
+        return (0, _utils.promisify)(_this.server.start, _this.server)();
+      }).then(function () {
+        // Set loggers
+        _this.config.logger = _this.server.log.bind(_this.server);
+        _Pool2.default.logger = _this.server.log.bind(_this.server);
+
+        // Let's go
+        _this.server.log(['debug'], 'Server running at: ' + _this.server.info.uri);
+      });
+    }
   }]);
 
   return Server;
 }();
 
-exports['default'] = Server;
+exports.default = Server;
 
 /***/ }),
 /* 9 */
 /***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 
 Object.defineProperty(exports, "__esModule", {
     value: true
@@ -1197,29 +1129,32 @@ var _rfc = __webpack_require__(10);
 
 var _rfc2 = _interopRequireDefault(_rfc);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports['default'] = _rfc2['default']; /*
-                                           r3connect
-                                           Copyright (C) 2017 Julian Hundeloh
-                                       
-                                           This program is free software: you can redistribute it and/or modify
-                                           it under the terms of the GNU Affero General Public License as published
-                                           by the Free Software Foundation, either version 3 of the License, or
-                                           (at your option) any later version.
-                                       
-                                           This program is distributed in the hope that it will be useful,
-                                           but WITHOUT ANY WARRANTY; without even the implied warranty of
-                                           MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-                                           GNU Affero General Public License for more details.
-                                       
-                                           You should have received a copy of the GNU Affero General Public License
-                                           along with this program.  If not, see <http://www.gnu.org/licenses/>.
-                                       */
+exports.default = _rfc2.default; /*
+                                     r3connect
+                                     Copyright (C) 2017 Julian Hundeloh
+                                 
+                                     This program is free software: you can redistribute it and/or modify
+                                     it under the terms of the GNU Affero General Public License as published
+                                     by the Free Software Foundation, either version 3 of the License, or
+                                     (at your option) any later version.
+                                 
+                                     This program is distributed in the hope that it will be useful,
+                                     but WITHOUT ANY WARRANTY; without even the implied warranty of
+                                     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+                                     GNU Affero General Public License for more details.
+                                 
+                                     You should have received a copy of the GNU Affero General Public License
+                                     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+                                 */
 
 /***/ }),
 /* 10 */
 /***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -1255,9 +1190,9 @@ var _Exceptions = __webpack_require__(1);
 
 var _utils = __webpack_require__(0);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports['default'] = [
+exports.default = [
 // Invoke RFC
 {
   method: 'POST',
@@ -1268,85 +1203,81 @@ exports['default'] = [
     tags: ['api'],
     validate: {
       params: {
-        functionModule: _joi2['default'].string().regex(/^[0-9a-zA-Z/_]+$/)
+        functionModule: _joi2.default.string().regex(/^[0-9a-zA-Z/_]+$/)
       },
 
       payload: {
-        connection: _joi2['default'].string().token().optional().example('XYZ'),
-        username: _joi2['default'].string().token().max(12).optional().example('DDIC'),
-        password: _joi2['default'].string().max(40).optional().example('11920706'),
-        applicationServer: _joi2['default'].string().required().example('gateway.example.corp'),
-        instanceNumber: _joi2['default'].number().integer().min(0).max(99).required().example(1),
-        client: _joi2['default'].number().integer().min(0).max(999).required().example(100),
-        router: _joi2['default'].string()['default']('').allow(''),
-        mysapsso2: _joi2['default'].string()['default']('').allow(''),
-        parameters: _joi2['default'].object()['default']({}).example(JSON.stringify({
+        connection: _joi2.default.string().token().optional().example('XYZ'),
+        username: _joi2.default.string().token().max(12).optional().example('DDIC'),
+        password: _joi2.default.string().max(40).optional().example('11920706'),
+        applicationServer: _joi2.default.string().required().example('gateway.example.corp'),
+        instanceNumber: _joi2.default.number().integer().min(0).max(99).required().example(1),
+        client: _joi2.default.number().integer().min(0).max(999).required().example(100),
+        router: _joi2.default.string().default('').allow(''),
+        mysapsso2: _joi2.default.string().default('').allow(''),
+        parameters: _joi2.default.object().default({}).example(JSON.stringify({
           iv_input: 'example'
         }))
       }
     }
   },
-  handler: function () {
-    function handler(request, reply) {
-      var functionModule = request.params.functionModule;
+  handler: function handler(request, reply) {
+    var functionModule = request.params.functionModule;
 
-      // Get configuration for connection (also if the passed connection is undefined)
-      var connections = request.config.get('connections');
-      var connection = connections[request.payload.connection];
+    // Get configuration for connection (also if the passed connection is undefined)
+    var connections = request.config.get('connections');
+    var connection = connections[request.payload.connection];
 
-      // Proceed only if the provided connection exists
-      if (request.payload.connection && !connection) {
-        return reply.error(new _Exceptions.HttpException('The connection you provided is invalid.'));
-      }
-
-      // Check if the function module is black/white listed
-      var whitelisted = (0, _utils.isListed)(connection.functionModules.whitelist, functionModule);
-      if (!whitelisted) {
-        var blacklisted = (0, _utils.isListed)(connection.functionModules.blacklist, functionModule);
-        if (blacklisted) {
-          return reply.error(new _Exceptions.HttpException('The function module "' + String(functionModule) + '" is blacklisted.'));
-        }
-      }
-
-      // Create configuration
-      var configuration = {
-        applicationServer: connection.applicationServer || request.payload.applicationServer,
-        instanceNumber: connection.instanceNumber || request.payload.instanceNumber,
-        client: connection.client || request.payload.client,
-        router: connection.router || request.payload.router
-
-        // Add credentials (either SSO2 cookie or user/password)
-      };if (request.payload.mysapsso2 || request.state.MYSAPSSO2) {
-        // Use connection.MYSAPSSO2 because it will allow to disable cookies via configuration (via mysapsso2 = null)
-        configuration.mysapsso2 = connection.mysapsso2 || request.payload.mysapsso2 || request.state.MYSAPSSO2;
-      } else {
-        configuration.username = connection.username || request.payload.username;
-        configuration.password = connection.password || request.payload.password;
-      }
-
-      // Acquire connection from pool and invoke RFC
-      var parameters = request.payload.parameters;
-      _Pool2['default'].get(configuration, request.log.bind(request)).acquire().then(function (client) {
-        return client.invoke(functionModule, parameters);
-      }).then(function (_ref) {
-        var _ref2 = _slicedToArray(_ref, 2),
-            result = _ref2[0],
-            meta = _ref2[1];
-
-        // Reply with result but as well metadata that was gathered
-        reply({
-          result: result,
-          meta: meta
-        });
-      })['catch'](function (error) {
-        reply.error(error);
-      });
-
-      return null;
+    // Proceed only if the provided connection exists
+    if (request.payload.connection && !connection) {
+      return reply.error(new _Exceptions.HttpException('The connection you provided is invalid.'));
     }
 
-    return handler;
-  }()
+    // Check if the function module is black/white listed
+    var whitelisted = (0, _utils.isListed)(connection.functionModules.whitelist, functionModule);
+    if (!whitelisted) {
+      var blacklisted = (0, _utils.isListed)(connection.functionModules.blacklist, functionModule);
+      if (blacklisted) {
+        return reply.error(new _Exceptions.HttpException('The function module "' + functionModule + '" is blacklisted.'));
+      }
+    }
+
+    // Create configuration
+    var configuration = {
+      applicationServer: connection.applicationServer || request.payload.applicationServer,
+      instanceNumber: connection.instanceNumber || request.payload.instanceNumber,
+      client: connection.client || request.payload.client,
+      router: connection.router || request.payload.router
+
+      // Add credentials (either SSO2 cookie or user/password)
+    };if (request.payload.mysapsso2 || request.state.MYSAPSSO2) {
+      // Use connection.MYSAPSSO2 because it will allow to disable cookies via configuration (via mysapsso2 = null)
+      configuration.mysapsso2 = connection.mysapsso2 || request.payload.mysapsso2 || request.state.MYSAPSSO2;
+    } else {
+      configuration.username = connection.username || request.payload.username;
+      configuration.password = connection.password || request.payload.password;
+    }
+
+    // Acquire connection from pool and invoke RFC
+    var parameters = request.payload.parameters;
+    _Pool2.default.get(configuration, request.log.bind(request)).acquire().then(function (client) {
+      return client.invoke(functionModule, parameters);
+    }).then(function (_ref) {
+      var _ref2 = _slicedToArray(_ref, 2),
+          result = _ref2[0],
+          meta = _ref2[1];
+
+      // Reply with result but as well metadata that was gathered
+      reply({
+        result: result,
+        meta: meta
+      });
+    }).catch(function (error) {
+      reply.error(error);
+    });
+
+    return null;
+  }
 }];
 
 /***/ }),
