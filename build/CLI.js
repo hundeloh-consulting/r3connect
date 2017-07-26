@@ -64,7 +64,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 27);
+/******/ 	return __webpack_require__(__webpack_require__.s = 29);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -1944,35 +1944,47 @@ module.exports = require("source-map");
 /* 23 */
 /***/ (function(module, exports) {
 
-module.exports = require("chalk");
+module.exports = {"name":"r3connect","version":"1.1.0","author":"Julian Hundeloh","email":"julian@hundeloh-consulting.ch","license":"AGPL-3.0+","description":"r3connect is a lean wrapper of node-rfc that provides comfortable access to SAP back-ends via a simple REST API.","engines":{"node":">=6.0.0"},"main":"./build/index.js","bin":{"r3connect":"./cli.js"},"scripts":{"cli":"better-npm-run cli","build":"better-npm-run build","dev":"better-npm-run dev","test":"better-npm-run test","format":"better-npm-run format","precommit":"npm run test && npm run format && npm run build && git add build","commitmsg":"validate-commit-msg","postmerge":"npm install","postrewrite":"npm install"},"betterScripts":{"cli":{"command":"node ./build/cli.js"},"build":{"command":"rimraf ./build && webpack --progress --colors","env":{"NODE_ENV":"production"}},"dev":{"command":"babel-watch ./src/cli.js --inspect --source-maps","env":{"NODE_ENV":"development"}},"test":{"command":"mocha --compilers js:babel-register --require babel-polyfill ./src/**/*.spec.js","env":{"NODE_ENV":"development"}},"format":{"command":"prettier-standard 'src/**/*.js'","env":{"NODE_ENV":"production"}}},"lint-staged":{"*.js":["prettier-standard","git add"]},"config":{"validate-commit-msg":{"types":["feat","fix","docs","style","refactor","perf","test","chore","revert"],"helpMessage":"Types: feat, fix, docs, style, refactor, perf, test, chore, revert"}},"dependencies":{"better-npm-run":"0.0.15","chalk":"^2.0.1","colors.js":"^1.2.4","error-subclass":"^2.2.0","fs-extra":"^4.0.0","good":"^7.2.0","good-console":"^6.2.0","good-file":"^6.0.1","good-squeeze":"^5.0.1","hapi":"^16.4.3","hapi-boom-decorators":"^3.0.0","joi":"^10.5.2","object-hash":"^1.1.8","pool2":"^1.4.1","source-map-support":"^0.4.15","update-notifier":"^2.2.0"},"peerDependencies":{"node-rfc":"^0.1.11"},"devDependencies":{"babel-core":"^6.25.0","babel-loader":"^7.0.0","babel-plugin-syntax-flow":"^6.18.0","babel-plugin-transform-class-properties":"^6.24.1","babel-plugin-transform-flow-strip-types":"^6.18.0","babel-plugin-typecheck":"^3.9.0","babel-polyfill":"^6.23.0","babel-preset-airbnb":"^2.2.3","babel-register":"^6.24.1","babel-watch":"^2.0.7","chai":"^4.0.2","husky":"^0.13.4","json-loader":"^0.5.4","lint-staged":"^3.6.1","mocha":"^3.4.2","prettier-standard":"^6.0.0","rimraf":"^2.5.4","validate-commit-msg":"^2.12.2","webpack":"^2.6.1"}}
 
 /***/ }),
 /* 24 */
 /***/ (function(module, exports) {
 
-module.exports = require("child_process");
+module.exports = require("chalk");
 
 /***/ }),
 /* 25 */
 /***/ (function(module, exports) {
 
-module.exports = require("fs-extra");
+module.exports = require("child_process");
 
 /***/ }),
 /* 26 */
 /***/ (function(module, exports) {
 
-module.exports = require("os");
+module.exports = require("fs-extra");
 
 /***/ }),
 /* 27 */
+/***/ (function(module, exports) {
+
+module.exports = require("os");
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports) {
+
+module.exports = require("update-notifier");
+
+/***/ }),
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _os = __webpack_require__(26);
+var _os = __webpack_require__(27);
 
 var _os2 = _interopRequireDefault(_os);
 
@@ -1980,17 +1992,25 @@ var _path = __webpack_require__(5);
 
 var _path2 = _interopRequireDefault(_path);
 
-var _child_process = __webpack_require__(24);
+var _child_process = __webpack_require__(25);
 
 var _child_process2 = _interopRequireDefault(_child_process);
 
-var _chalk = __webpack_require__(23);
+var _chalk = __webpack_require__(24);
 
 var _chalk2 = _interopRequireDefault(_chalk);
 
-var _fsExtra = __webpack_require__(25);
+var _fsExtra = __webpack_require__(26);
 
 var _fsExtra2 = _interopRequireDefault(_fsExtra);
+
+var _updateNotifier = __webpack_require__(28);
+
+var _updateNotifier2 = _interopRequireDefault(_updateNotifier);
+
+var _package = __webpack_require__(23);
+
+var _package2 = _interopRequireDefault(_package);
 
 var _index = __webpack_require__(6);
 
@@ -2017,7 +2037,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 exports['default'] = function (requirex) {
   // Set color theme
   var logger = {
-    // eslint-disable-next-line no-console
     log: console.log,
     success: function () {
       function success(text) {
@@ -2056,7 +2075,6 @@ exports['default'] = function (requirex) {
     var loadedConfig = null;
     try {
       var content = _fsExtra2['default'].readFileSync(file, 'utf8');
-      // eslint-disable-next-line no-eval
       loadedConfig = eval(content);
     } catch (error) {
       loadedConfig = null;
@@ -2065,9 +2083,10 @@ exports['default'] = function (requirex) {
   }
 
   // Welcome
-  /* eslint-disable */
   logger.log('\n      ____                                  _   \n      |___                                 | |  \n  _ __ __) | ___ ___  _ __  _ __   ___  ___| |_ \n  | \'__|__ < / __/ _ | \'_ | \'_  / _ / __| __|\n  | |  ___) | (_| (_) | | | | | | |  __/ (__| |_ \n  |_| |____/ ______/|_| |_|_| |_|___|___|__|\n  ');
-  /* eslint-enable */
+
+  // Check for updates
+  (0, _updateNotifier2['default'])({ pkg: _package2['default'] }).notify();
 
   // Get package
   var project = null;
