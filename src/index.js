@@ -7,7 +7,7 @@ const r3connect: Object = {
   Client: _Client,
   Configuration: _Configuration,
   Pool: _Pool,
-  Server: _Server
+  Server: _Server,
 }
 
 export default r3connect

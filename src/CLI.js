@@ -32,14 +32,14 @@ export default (requirex: Function) => {
     success: text => logger.log(chalk.bold.green(text)),
     info: text => logger.log(chalk.blue(text)),
     error: text => logger.log(chalk.bold.red(text)),
-    warn: text => logger.log(chalk.yellow(text))
+    warn: text => logger.log(chalk.yellow(text)),
   }
 
   // Helper function to load configuration from project folder
   const pathToFallbackConfig: string = path.join(__dirname, '..', 'config.js')
   const pathToConfig: string = path.join(process.cwd(), 'config.js')
   let config: ?Object = null
-  function loadConfig (file) {
+  function loadConfig(file) {
     let loadedConfig = null
     try {
       const content: string = fs.readFileSync(file, 'utf8')
@@ -51,16 +51,14 @@ export default (requirex: Function) => {
   }
 
   // Welcome
-  logger.log(
-    `
+  logger.log(`
       ____                                  _   
       |___ \                                | |  
   _ __ __) | ___ ___  _ __  _ __   ___  ___| |_ 
   | '__|__ < / __/ _ \| '_ \| '_ \ / _ \/ __| __|
   | |  ___) | (_| (_) | | | | | | |  __/ (__| |_ 
   |_| |____/ \___\___/|_| |_|_| |_|\___|\___|\__|
-  `
-  )
+  `)
 
   // Check for updates
   updateNotifier({ pkg }).notify()
@@ -69,11 +67,11 @@ export default (requirex: Function) => {
   let project: ?Object = null
   try {
     project = JSON.parse(
-      fs.readFileSync(path.join(process.cwd(), 'package.json'))
+      fs.readFileSync(path.join(process.cwd(), 'package.json')),
     )
   } catch (error) {
     logger.error(
-      'Please initiate this project as an npm package first by running "npm init".'
+      'Please initiate this project as an npm package first by running "npm init".',
     )
     process.exit(0)
   }
@@ -99,7 +97,7 @@ export default (requirex: Function) => {
 
       if (configAlreadyExists) {
         logger.error(
-          `It seems that there is already a configuration present ("${pathToConfig}"). Delete it before you try to initialize the project.`
+          `It seems that there is already a configuration present ("${pathToConfig}"). Delete it before you try to initialize the project.`,
         )
         process.exit(0)
       } else {
@@ -107,29 +105,29 @@ export default (requirex: Function) => {
         Promise.all([
           fs.copy(
             path.join(__dirname, '..', 'vendor'),
-            path.join(process.cwd(), 'vendor')
+            path.join(process.cwd(), 'vendor'),
           ),
           fs.copy(
             path.join(__dirname, '..', 'tls'),
-            path.join(process.cwd(), 'tls')
+            path.join(process.cwd(), 'tls'),
           ),
           fs.copy(
             path.join(__dirname, '..', 'Dockerfile'),
-            path.join(process.cwd(), 'Dockerfile')
+            path.join(process.cwd(), 'Dockerfile'),
           ),
           fs.copy(
             path.join(__dirname, '..', 'config.js'),
-            path.join(process.cwd(), 'config.js')
-          )
+            path.join(process.cwd(), 'config.js'),
+          ),
         ])
           .then(() => {
             logger.success(
-              'We initialized your project folder and you can start changing the configuration. Once you think you are ready, run "r3connect server" or "r3connect docker".'
+              'We initialized your project folder and you can start changing the configuration. Once you think you are ready, run "r3connect server" or "r3connect docker".',
             )
           })
           .catch(() => {
             logger.error(
-              'We tried to initialize your project folder but for some reason it failed. Please check the permissions of the folder.'
+              'We tried to initialize your project folder but for some reason it failed. Please check the permissions of the folder.',
             )
           })
       }
@@ -144,13 +142,13 @@ export default (requirex: Function) => {
         fs.statSync(pathToConfig)
       } catch (error) {
         logger.error(
-          'We could not find a "config.js" file. Please ensure that you run "r3connect init" before you go on.'
+          'We could not find a "config.js" file. Please ensure that you run "r3connect init" before you go on.',
         )
         process.exit(0)
       }
       config = new Configuration(
         loadConfig(pathToConfig),
-        loadConfig(pathToFallbackConfig)
+        loadConfig(pathToFallbackConfig),
       )
 
       // Now differentiate between Server and Docker
@@ -159,33 +157,33 @@ export default (requirex: Function) => {
           // Check if node-rfc is installed and assign to client for later usage
           try {
             const NodeRFC: Object = requirex(
-              path.join(process.cwd(), 'node_modules', 'node-rfc')
+              path.join(process.cwd(), 'node_modules', 'node-rfc'),
             )
             Object.defineProperty(Client, 'NodeRFC', {
-              get: (): Object => NodeRFC.Client
+              get: (): Object => NodeRFC.Client,
             })
           } catch (error) {
             const target: string = path.join(
               process.cwd(),
               'vendor',
-              'nwrfcsdk'
+              'nwrfcsdk',
             )
             const targetLib: string = path.join(target, 'lib')
 
             logger.error('For some reason "node-rfc" could not be loaded.')
             logger.info(
-              'Please make sure that you download the SAP NW RFC Library from the SAP Service Marketplace and follow these steps:'
+              'Please make sure that you download the SAP NW RFC Library from the SAP Service Marketplace and follow these steps:',
             )
             logger.log(`1. Unpack the downloaded archive to "${target}".`)
             logger.log(`2. Make sure that the directory "${targetLib}" exists.`)
             switch (os.platform()) {
               case 'win32': {
                 logger.log(
-                  `3. Add "${targetLib}" to the PATH environment variable via the following command:`
+                  `3. Add "${targetLib}" to the PATH environment variable via the following command:`,
                 )
                 logger.log(`   SET PATH=%PATH%;${targetLib};`)
                 logger.log(
-                  '4. Run "npm install node-rfc --save" in the current project folder.'
+                  '4. Run "npm install node-rfc --save" in the current project folder.',
                 )
 
                 break
@@ -194,13 +192,13 @@ export default (requirex: Function) => {
               case 'darwin':
               case 'linux': {
                 logger.log(
-                  '3. As root, create a file "/etc/ld.so.conf.d/nwrfcsdk.conf" and add the following content:'
+                  '3. As root, create a file "/etc/ld.so.conf.d/nwrfcsdk.conf" and add the following content:',
                 )
                 logger.log('   # include nwrfcsdk')
                 logger.log(`   ${targetLib}`)
                 logger.log('4. As root, run the command "ldconfig".')
                 logger.log(
-                  '5. Run "npm install node-rfc --save" in the current project folder.'
+                  '5. Run "npm install node-rfc --save" in the current project folder.',
                 )
 
                 break
@@ -234,14 +232,14 @@ export default (requirex: Function) => {
             `--build-arg R3CONNECT_PORT=${port}`,
             '-t',
             project.name,
-            '.'
+            '.',
           ])
 
           // Once it is ready
           docker.on('close', (code: number) => {
             if (code === 0) {
               logger.success(
-                `The Docker container was successfully built. Start the container by running "docker run -it -p ${port}:${port} ${project.name}".`
+                `The Docker container was successfully built. Start the container by running "docker run -it -p ${port}:${port} ${project.name}".`,
               )
             }
           })
@@ -249,7 +247,7 @@ export default (requirex: Function) => {
           // Or it failed?
           docker.on('error', () => {
             logger.error(
-              'There was an issue while building the Docker container. Please install Docker first and check the Docker logs in order to solve the issue.'
+              'There was an issue while building the Docker container. Please install Docker first and check the Docker logs in order to solve the issue.',
             )
           })
 
