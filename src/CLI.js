@@ -28,6 +28,7 @@ import { Client, Configuration, Server } from './index'
 export default (requirex: Function) => {
   // Set color theme
   const logger: Object = {
+    // eslint-disable-next-line no-console
     log: console.log,
     success: text => logger.log(chalk.bold.green(text)),
     info: text => logger.log(chalk.blue(text)),
@@ -42,8 +43,7 @@ export default (requirex: Function) => {
   function loadConfig(file) {
     let loadedConfig = null
     try {
-      const content: string = fs.readFileSync(file, 'utf8')
-      loadedConfig = eval(content)
+      loadedConfig = requirex(file)
     } catch (error) {
       loadedConfig = null
     }
@@ -51,6 +51,7 @@ export default (requirex: Function) => {
   }
 
   // Welcome
+  /* eslint-disable */
   logger.log(`
       ____                                  _   
       |___ \                                | |  
@@ -59,6 +60,7 @@ export default (requirex: Function) => {
   | |  ___) | (_| (_) | | | | | | |  __/ (__| |_ 
   |_| |____/ \___\___/|_| |_|_| |_|\___|\___|\__|
   `)
+  /* eslint-enable */
 
   // Check for updates
   updateNotifier({ pkg }).notify()

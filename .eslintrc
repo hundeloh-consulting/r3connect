@@ -1,13 +1,17 @@
 {
-	"parser": "babel-eslint",
-	"parserOptions": {
-		"ecmaFeatures": {
-			"jsx": true,
-			"modules": true
-		}
-	},
-	"plugins": [ "flowtype", "prettier" ],
-	"rules": {
-		"prettier/prettier": [ "error", { "singleQuote": true, "trailingComma": "all", "semi": false } ]
-	}
+  "extends": ["airbnb-base/legacy", "prettier"],
+  "parser": "babel-eslint",
+  "env": { "es6": true },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "modules": true
+    }
+  },
+  "plugins": ["flowtype", "prettier"],
+  "rules": {
+    "prettier/prettier": [
+      "error",
+      { "singleQuote": true, "trailingComma": "all", "semi": false }
+    ]
+  }
 }

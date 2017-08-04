@@ -1875,7 +1875,7 @@ module.exports = require("source-map");
 /* 23 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"r3connect","version":"1.1.0","author":"Julian Hundeloh","email":"julian@hundeloh-consulting.ch","license":"AGPL-3.0+","description":"r3connect is a lean wrapper of node-rfc that provides comfortable access to SAP back-ends via a simple REST API.","engines":{"node":">=6.0.0"},"main":"./build/index.js","bin":{"r3connect":"./cli.js"},"scripts":{"cli":"better-npm-run cli","build":"better-npm-run build","dev":"better-npm-run dev","test":"better-npm-run test","format":"better-npm-run format","lint":"better-npm-run lint","precommit":"npm run test && npm run format && npm run lint && npm run build && git add build","commitmsg":"validate-commit-msg","postmerge":"npm install","postrewrite":"npm install"},"betterScripts":{"cli":{"command":"node ./build/cli.js"},"build":{"command":"rimraf ./build && webpack --progress --colors","env":{"NODE_ENV":"production"}},"dev":{"command":"babel-watch ./src/cli.js --inspect --source-maps","env":{"NODE_ENV":"development"}},"test":{"command":"mocha --compilers js:babel-register --require babel-polyfill ./src/**/*.spec.js","env":{"NODE_ENV":"development"}},"format":{"command":"prettier src/**/*.js --single-quote --trailing-comma all --no-semi --write","env":{"NODE_ENV":"production"}},"lint":{"command":"eslint src/**/*.js","env":{"NODE_ENV":"production"}}},"lint-staged":{"*.js":["prettier","standard","git add"]},"config":{"validate-commit-msg":{"types":["feat","fix","docs","style","refactor","perf","test","chore","revert"],"helpMessage":"Types: feat, fix, docs, style, refactor, perf, test, chore, revert"}},"dependencies":{"better-npm-run":"0.0.15","chalk":"^2.0.1","colors.js":"^1.2.4","error-subclass":"^2.2.0","fs-extra":"^4.0.0","good":"^7.2.0","good-console":"^6.2.0","good-file":"^6.0.1","good-squeeze":"^5.0.1","hapi":"^16.4.3","hapi-boom-decorators":"^3.0.0","joi":"^10.5.2","object-hash":"^1.1.8","pool2":"^1.4.1","source-map-support":"^0.4.15","update-notifier":"^2.2.0"},"peerDependencies":{"node-rfc":"^0.1.11"},"devDependencies":{"babel-core":"^6.25.0","babel-eslint":"^7.2.3","babel-loader":"^7.0.0","babel-plugin-syntax-flow":"^6.18.0","babel-plugin-transform-class-properties":"^6.24.1","babel-plugin-transform-flow-strip-types":"^6.18.0","babel-plugin-typecheck":"^3.9.0","babel-polyfill":"^6.23.0","babel-preset-env":"^1.6.0","babel-register":"^6.24.1","babel-watch":"^2.0.7","chai":"^4.0.2","eslint":"^4.3.0","eslint-plugin-flowtype":"^2.35.0","eslint-plugin-prettier":"^2.1.2","husky":"^0.13.4","json-loader":"^0.5.4","lint-staged":"^3.6.1","mocha":"^3.4.2","prettier":"^1.5.3","rimraf":"^2.5.4","validate-commit-msg":"^2.12.2","webpack":"^2.6.1"}}
+module.exports = {"name":"r3connect","version":"1.1.0","author":"Julian Hundeloh","email":"julian@hundeloh-consulting.ch","license":"AGPL-3.0+","description":"r3connect is a lean wrapper of node-rfc that provides comfortable access to SAP back-ends via a simple REST API.","engines":{"node":">=6.0.0"},"main":"./build/index.js","bin":{"r3connect":"./cli.js"},"scripts":{"cli":"better-npm-run cli","build":"better-npm-run build","dev":"better-npm-run dev","test":"better-npm-run test","format":"better-npm-run format","lint":"better-npm-run lint","precommit":"npm run test && npm run format && npm run lint && npm run build && git add build","commitmsg":"validate-commit-msg","postmerge":"npm install","postrewrite":"npm install"},"betterScripts":{"cli":{"command":"node ./build/cli.js"},"build":{"command":"rimraf ./build && webpack --progress --colors","env":{"NODE_ENV":"production"}},"dev":{"command":"babel-watch ./src/cli.js --inspect --source-maps","env":{"NODE_ENV":"development"}},"test":{"command":"mocha --compilers js:babel-register --require babel-polyfill ./src/**/*.spec.js","env":{"NODE_ENV":"development"}},"format":{"command":"prettier src/**/*.js --single-quote --trailing-comma all --no-semi --write","env":{"NODE_ENV":"production"}},"lint":{"command":"eslint src/**/*.js --fix","env":{"NODE_ENV":"production"}}},"lint-staged":{"*.js":["prettier","git add"]},"config":{"validate-commit-msg":{"types":["feat","fix","docs","style","refactor","perf","test","chore","revert"],"helpMessage":"Types: feat, fix, docs, style, refactor, perf, test, chore, revert"}},"dependencies":{"better-npm-run":"0.0.15","chalk":"^2.0.1","colors.js":"^1.2.4","error-subclass":"^2.2.0","fs-extra":"^4.0.0","good":"^7.2.0","good-console":"^6.2.0","good-file":"^6.0.1","good-squeeze":"^5.0.1","hapi":"^16.4.3","hapi-boom-decorators":"^3.0.0","joi":"^10.5.2","object-hash":"^1.1.8","pool2":"^1.4.1","source-map-support":"^0.4.15","update-notifier":"^2.2.0"},"peerDependencies":{"node-rfc":"^0.1.11"},"devDependencies":{"babel-core":"^6.25.0","babel-eslint":"^7.2.3","babel-loader":"^7.0.0","babel-plugin-syntax-flow":"^6.18.0","babel-plugin-transform-class-properties":"^6.24.1","babel-plugin-transform-flow-strip-types":"^6.18.0","babel-plugin-typecheck":"^3.9.0","babel-polyfill":"^6.23.0","babel-preset-env":"^1.6.0","babel-watch":"^2.0.7","chai":"^4.0.2","eslint":"^4.3.0","eslint-config-airbnb-base":"^11.3.1","eslint-config-prettier":"^2.3.0","eslint-plugin-flowtype":"^2.35.0","eslint-plugin-import":"^2.7.0","eslint-plugin-prettier":"^2.1.2","husky":"^0.13.4","json-loader":"^0.5.4","lint-staged":"^3.6.1","mocha":"^3.4.2","prettier":"^1.5.3","rimraf":"^2.5.4","validate-commit-msg":"^2.12.2","webpack":"^2.6.1"}}
 
 /***/ }),
 /* 24 */
@@ -1971,6 +1971,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 exports.default = function (requirex) {
   // Set color theme
   var logger = {
+    // eslint-disable-next-line no-console
     log: console.log,
     success: function success(text) {
       return logger.log(_chalk2.default.bold.green(text));
@@ -1992,8 +1993,7 @@ exports.default = function (requirex) {
   function loadConfig(file) {
     var loadedConfig = null;
     try {
-      var content = _fsExtra2.default.readFileSync(file, 'utf8');
-      loadedConfig = eval(content);
+      loadedConfig = requirex(file);
     } catch (error) {
       loadedConfig = null;
     }
@@ -2001,7 +2001,9 @@ exports.default = function (requirex) {
   }
 
   // Welcome
+  /* eslint-disable */
   logger.log('\n      ____                                  _   \n      |___                                 | |  \n  _ __ __) | ___ ___  _ __  _ __   ___  ___| |_ \n  | \'__|__ < / __/ _ | \'_ | \'_  / _ / __| __|\n  | |  ___) | (_| (_) | | | | | | |  __/ (__| |_ \n  |_| |____/ ______/|_| |_|_| |_|___|___|__|\n  ');
+  /* eslint-enable */
 
   // Check for updates
   (0, _updateNotifier2.default)({ pkg: _package2.default }).notify();

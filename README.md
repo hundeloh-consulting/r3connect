@@ -1,11 +1,16 @@
 ![r3connect](https://cdn.rawgit.com/hundeloh-consulting/r3connect/master/logo.svg)
 
+![npm](https://img.shields.io/npm/v/r3connect.svg) 
+![license](https://img.shields.io/npm/l/r3connect.svg) 
+![github-issues](https://img.shields.io/github/issues/hundeloh-consulting/r3connect.svg)  
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 
 _r3connect_ is a lean wrapper of [node-rfc](https://github.com/SAP/node-rfc/) that provides comfortable access to SAP back-ends via a simple REST API or via a Promise-based API.
 All remote function calls are handled via connection pools in order to reuse connections as much as possible and run function calls in parallel. 
 Technical errors are prettified and mapped to corresponding HTTP responses. 
 In favor of simplification this module is also designed to run in a container with [Docker](https://www.docker.com/).
+
+![nodei.co](https://nodei.co/npm/r3connect.png?downloads=true&downloadRank=true&stars=true)
 
 ## Getting Started
 
